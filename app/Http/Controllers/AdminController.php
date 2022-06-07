@@ -76,6 +76,7 @@ class AdminController extends Controller
         if(Session::has('loginId'))
         {
             Session::pull('loginId');
+            Session::pull('adminName');
             return redirect('/');
         }
     }

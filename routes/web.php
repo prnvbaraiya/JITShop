@@ -21,6 +21,8 @@ Route::get('/login',function(){
     return view('pages.login');
 });
 Route::post('/register', 'App\Http\Controllers\UserController@store');
+Route::post('/login', 'App\Http\Controllers\UserController@check');
+Route::get('/logout', 'App\Http\Controllers\UserController@logout');
 
 // Route::group(['prefix' => 'admin',  'middleware' => 'adminAuth'],function(){
 Route::prefix('admin')->group( function(){
@@ -78,7 +80,7 @@ Route::prefix('admin')->group( function(){
         });
     });
 
-    Route::prefix('product')->middleware('adminAuth')->group( function(){
+    Route::prefix('product')->group( function(){
         Route::controller(App\Http\Controllers\ProductController::class)->group(function(){
             Route::get('/','index');
             Route::get('/add','add');
@@ -89,7 +91,7 @@ Route::prefix('admin')->group( function(){
         });
     });
 
-    Route::prefix('user')->group( function(){
+    Route::prefix('user')->middleware('adminAuth')->group( function(){
         Route::controller(App\Http\Controllers\UserController::class)->group(function(){
             Route::get('/','index');
             Route::get('/add','add');

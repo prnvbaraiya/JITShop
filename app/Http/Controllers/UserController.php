@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class UserController extends Controller
 {
@@ -39,7 +40,7 @@ class UserController extends Controller
         if(request()->session()->has('loginId')){
             return redirect('/admin/user')->with('message','added Successfully');
         }
-        return back()->with('message','added Successfully');
+        return $this->check();
     }
     
     public function edit(User $user)
@@ -63,5 +64,48 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect('/admin/user')->with('danger-message','Deleted Successfully');
+    }
+
+    public function check()
+    {
+        $data = request()->validate([
+            'email'=>'required',
+            'password'=>'required',  
+        ]);
+        $user = User::where('email','=',$data['email'])->first();
+        if($user)
+        {
+            if(Hash::check($data['password'], $user['password']))
+            {
+                request()->session()->put('userId',$user->id);
+                request()->session()->put('userName',$user->name);
+                return redirect('/');
+            }
+            else
+            {
+                return redirect('/login')->with('message','Password is Wrong');
+            }
+        }
+        else
+        {
+            return redirect('/login')->with('message','email is not registered');
+        }
+    }
+
+    public static function isUser(){
+        if(Session::has('userId')){
+            return true;
+        }
+        return false;
+    }
+
+    public function logout()
+    {
+        if(Session::has('userId'))
+        {
+            Session::pull('userId');
+            Session::pull('userName');
+            return redirect('/');
+        }
     }
 }

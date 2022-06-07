@@ -6,10 +6,10 @@
     <div class="container" style="margin-top:-15rem;">
         <div class="row">    
             @if (session('message'))
-            <div style="background-color:lightgreen;background-opacity:1;margin-top:5rem;text-align:center;text-color:black;">{{session('message')}}</div>
+                <div style="background-color:lightgreen;background-opacity:1;margin-top:5rem;text-align:center;text-color:black;">{{session('message')}}</div>
             @endif
             @if($errors->any())
-            {!! implode('',$errors->all('<div>:message</div>'))!!}
+            {!! implode('',$errors->all('<div style="text-align: center">:message</div>'))!!}
         @endif
             <div class="col-md-5 login">
                 <h1>Login</h1>
