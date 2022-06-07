@@ -49,6 +49,6 @@
 
 <div class="container">
 	<div class="logo">
-		<a href="/"><img src="image/logo.jpg" width="100%"/></a>
+		<a href="/"><img src="/image/logo.jpg" width="100%"/></a>
 	</div>
 </div>

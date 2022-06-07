@@ -7,7 +7,7 @@
 		<div class="row">
 			@foreach($categories as $category)
 			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="product.php">	
+				<a href="/category/{{$category->id}}">	
 					<div class="box">
 						<img src="{{$category->image ?? '/storage/product/no-image.png'}}"/><br/>
 						<label>{{$category->name}}</label><br/>

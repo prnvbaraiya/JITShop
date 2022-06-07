@@ -29,6 +29,8 @@ Route::get('/contact',function(){
 Route::post('/register', 'App\Http\Controllers\UserController@store');
 Route::post('/login', 'App\Http\Controllers\UserController@check');
 Route::get('/logout', 'App\Http\Controllers\UserController@logout');
+Route::get('/category/{category}','App\Http\Controllers\HomeController@category');
+Route::get('/product/{product}','App\Http\Controllers\HomeController@product');
 
 // Route::group(['prefix' => 'admin',  'middleware' => 'adminAuth'],function(){
 Route::prefix('admin')->group( function(){

@@ -16,10 +16,10 @@
             </div>
             <div class="col-md-4 social" align="center">
                 <label>Follow Us on</label><br />
-                 <a href="#"><img src="image/fb.png" /></a>
-                <a href="#"><img src="image/gp.png" /></a>
-                 <a href="#"><img src="image/twit.png" /></a>
-                 <a href="#"><img src="image/yt.png" /></a>
+                 <a href="#"><img src="/image/fb.png" /></a>
+                <a href="#"><img src="/image/gp.png" /></a>
+                 <a href="#"><img src="/image/twit.png" /></a>
+                 <a href="#"><img src="/image/yt.png" /></a>
             </div>
             <div align="center" class="credit-links">
                 <a href="http://3kinfotek.com/">www.3kinfotek.com</a><br/>
