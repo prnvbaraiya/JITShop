@@ -20,6 +20,12 @@ Route::get('/', function () {
 Route::get('/login',function(){
     return view('pages.login');
 });
+Route::get('/about',function(){
+    return view('pages.about');
+});
+Route::get('/contact',function(){
+    return view('pages.contact');
+});
 Route::post('/register', 'App\Http\Controllers\UserController@store');
 Route::post('/login', 'App\Http\Controllers\UserController@check');
 Route::get('/logout', 'App\Http\Controllers\UserController@logout');

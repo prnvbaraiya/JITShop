@@ -11,7 +11,6 @@
 					<div class="box">
 						<img src="{{$category->image ?? '/storage/product/no-image.png'}}"/><br/>
 						<label>{{$category->name}}</label><br/>
-						<label class="descspan">Descriptionfsdfsdfdsffsd sdfsdf sfsddfds</label><br/>
 					</div>
 				</a>
 			</div>

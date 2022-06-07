@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-    @include('components.banner')
+    <x-banner/>
     @include('partial.slider')
-    @include('components.sbc')
-    <x-sbs></x-sbs>
+    <x-sbc/>
+    <x-sbs/>
     
     <div>
         <div class="left-side-info">
