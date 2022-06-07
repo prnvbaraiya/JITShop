@@ -1,0 +1,113 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('pages.index');
+});
+
+Route::get('/login',function(){
+    return view('pages.login');
+});
+Route::post('/register', 'App\Http\Controllers\UserController@store');
+
+// Route::group(['prefix' => 'admin',  'middleware' => 'adminAuth'],function(){
+Route::prefix('admin')->group( function(){
+    
+    Route::controller(App\Http\Controllers\AdminController::class)->group(function(){
+        Route::get('/','signin')->middleware('alreadyLogin');
+        Route::post('/','check');
+        Route::get('/signup','signup')->middleware('alreadyLogin');
+        Route::post('/signup','store');
+        Route::get('/dashboard','view')->middleware('adminAuth');
+        Route::get('/logout','logout');
+    });
+
+    Route::prefix('brand')->group( function(){
+        Route::controller(App\Http\Controllers\BrandController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{brand}','edit');
+            Route::patch('{brand}','update');
+            Route::get('delete/{brand}','destroy');
+        });
+    });
+
+    Route::prefix('category')->group( function(){
+        Route::controller(App\Http\Controllers\CategoryController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{category}','edit');
+            Route::patch('{category}','update');
+            Route::get('delete/{category}','destroy');
+        });
+    });
+
+    Route::prefix('discount')->group( function(){
+        Route::controller(App\Http\Controllers\DiscountController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{discount}','edit');
+            Route::patch('{discount}','update');
+            Route::get('delete/{discount}','destroy');
+        });
+    });
+
+    Route::prefix('attribute')->group( function(){
+        Route::controller(App\Http\Controllers\AttributeController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{attribute}','edit');
+            Route::patch('{attribute}','update');
+            Route::get('delete/{attribute}','destroy');
+        });
+    });
+
+    Route::prefix('product')->middleware('adminAuth')->group( function(){
+        Route::controller(App\Http\Controllers\ProductController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{product}','edit');
+            Route::patch('{product}','update');
+            Route::get('delete/{product}','destroy');
+        });
+    });
+
+    Route::prefix('user')->group( function(){
+        Route::controller(App\Http\Controllers\UserController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{user}','edit');
+            Route::patch('{user}','update');
+            Route::get('delete/{user}','destroy');
+        });
+    });
+
+    Route::prefix('paymentMethod')->group( function(){
+        Route::controller(App\Http\Controllers\PaymentMethodController::class)->group(function(){
+            Route::get('/','index');
+            Route::get('/add','add');
+            Route::post('/','store');
+            Route::get('{paymentMethod}','edit');
+            Route::patch('{paymentMethod}','update');
+            Route::get('delete/{paymentMethod}','destroy');
+        });
+    });
+});
