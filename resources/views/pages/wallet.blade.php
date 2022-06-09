@@ -2,9 +2,9 @@
 @section('content')
     <div class="profile_container">
         <div class="tab">
-            <button class="tablinks"><a href="/profile">Profile</a></button>
-            <button class="tablinks active"><a href="wallet">Wallet</a></button>
-            <button class="tablinks"><a href="/orderHistory">Order History</a></button>
+            <a href="/profile"><button class="tablinks">Profile</button></a>
+            <a href="wallet"><button class="tablinks active">Wallet</button></a>
+            <a href="/orderHistory"><button class="tablinks">Order History</button></a>
         </div>
     </div>
     <div class="container">

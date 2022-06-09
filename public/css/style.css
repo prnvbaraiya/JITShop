@@ -819,7 +819,7 @@ input[type="password"] {
 
 .product__container {
     display: grid;
-    grid-template-columns: 35% 50%;
+    grid-template-columns: 35% 45%;
     gap: 15%;
 }
 .product__details {
@@ -885,6 +885,7 @@ a {
 /* Change background color of buttons on hover */
 .tab button:hover {
     background-color: #ddd;
+    color: black;
 }
 
 /* Create an active/current tablink class */
