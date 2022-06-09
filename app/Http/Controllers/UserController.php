@@ -57,7 +57,13 @@ class UserController extends Controller
         ]);
         $user->update($data);
         $users = User::get();
-        return redirect('/admin/user')->with('message','Updated Successfully');
+        if(Session::has('userId'))
+            Session::put('userName',$data['name']);
+        if(request()->session()->has('loginId')){
+            return redirect('/admin/user')->with('message','Updated Successfully');
+        }
+        return $this->profile();
+        
     }
 
     public function destroy(User $user)
@@ -99,13 +105,37 @@ class UserController extends Controller
         return false;
     }
 
+    public function profile(){
+        $user = $this->getUser(Session::get('userId'));
+        return view('pages.profile',compact('user'));
+    }
+
+    public function wallet(){
+        return view('pages.wallet');
+    }
+
+    public function orderHistory(){
+        $tableName = 'Order History';
+        $columns = ['id','item','total','time'];
+        $contents = ([['id'=>'1',
+                        'item'=>'mobile',
+                        'total'=>'123',
+                        'time'=>'12:30']]);
+        return view('pages.orderHistory',compact('tableName','columns','contents'));
+    }
+
+    public static function getUser($id){
+        return User::findOrFail($id);
+    }
+
     public function logout()
     {
+        Session::flush();
         if(Session::has('userId'))
         {
             Session::pull('userId');
             Session::pull('userName');
-            return redirect('/');
         }
+        return redirect('/');
     }
 }

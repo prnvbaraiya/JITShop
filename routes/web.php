@@ -29,6 +29,10 @@ Route::get('/contact',function(){
 Route::post('/register', 'App\Http\Controllers\UserController@store');
 Route::post('/login', 'App\Http\Controllers\UserController@check');
 Route::get('/logout', 'App\Http\Controllers\UserController@logout');
+Route::get('/profile', 'App\Http\Controllers\UserController@profile');
+Route::get('/wallet', 'App\Http\Controllers\UserController@wallet');
+Route::get('/orderHistory', 'App\Http\Controllers\UserController@orderHistory');
+Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
 Route::get('/category/{category}','App\Http\Controllers\HomeController@category');
 Route::get('/product/{product}','App\Http\Controllers\HomeController@product');
 

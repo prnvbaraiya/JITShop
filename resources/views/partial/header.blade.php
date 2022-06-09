@@ -12,6 +12,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
             <!-- <li><a href="index.php"><span class="glyphicon glyphicon-home"> </span></a></li> -->
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Categories <b class="caret"></b></a>
@@ -30,12 +31,12 @@
             <li><a href="/contact">Contact</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-          @if(!(App\Http\Controllers\UserController::isUser()))
+          @if(!Session::has('userId'))
               <li><a href="/login"><span class="glyphicon glyphicon-user"> </span> Login</a></li>
               <li><a href="/login"><span class="glyphicon glyphicon-list-alt"> </span> Register</a></li>
             @else
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{Session::get('userName')}}<b class="caret"></b></a>
+                  <a href="/profile" class="dropdown-toggle">{{Session::get('userName')}}<b class="caret"></b></a>
                   <ul class="dropdown-menu">
                     <li><a href="/logout">Logout</a></li>
                   </ul>

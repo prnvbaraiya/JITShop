@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <div class="margin-top">
-	<div class="container slide">
+	<div class="container slide category">
 		<h1>{{$category->name}}</h1><br/>
 		<div class="row">
         @foreach($category->product()->get() as $product)		
