@@ -16,12 +16,11 @@ return new class extends Migration
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('product_id');
-            $table->Integer('quantity');
+            $table->text('product_ids');
+            $table->text('quantity');
             $table->unsignedBigInteger('total');
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('product_id')->references('id')->on('product');
         });
     }
 

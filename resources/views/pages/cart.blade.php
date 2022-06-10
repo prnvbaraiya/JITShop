@@ -3,6 +3,15 @@
     <?php
     $items = App\Http\Controllers\CartController::getCart();
     ?>
+    <div class="profile_container">
+        <div class="tab">
+            <a href="/profile"><button class="tablinks">Profile</button></a>
+            <a href="/wallet"><button class="tablinks">Wallet</button></a>
+            <a href="/orderHistory"><button class="tablinks">Order History</button></a>
+            <a href="/cart"><button class="tablinks active">Cart</button></a>
+        </div>
+    </div>
+    <br><br><br>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -31,12 +40,15 @@
                                         <a class="thumbnail pull-left" href="#"> <img class="media-object"
                                                 src="{{ $product->image }}" style="width: 72px; height: 72px;"> </a>
                                         <div class="media-body">
-                                            <h4 class="media-heading"><a href="#">{{ $product->name }}</a></h4>
+                                            <h4 class="media-heading"><a
+                                                    href="/product/{{ $product->id }}">{{ $product->name }}</a></h4>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="col-sm-1 col-md-1" style="text-align: center">
+                                    {{-- <button>+</button> --}}
                                     <strong>{{ $item->quantity }}</strong>
+                                    {{-- <button>-</button> --}}
                                 </td>
                                 <td class="col-sm-1 col-md-1 text-center"><strong>Rs.{{ $product->price }}</strong></td>
                                 <td class="col-sm-1 col-md-1 text-center">

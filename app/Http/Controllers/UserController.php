@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\User;
+use \App\Models\Address;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Session;
 
 class UserController extends Controller
@@ -62,7 +64,29 @@ class UserController extends Controller
         if(request()->session()->has('loginId')){
             return redirect('/admin/user')->with('message','Updated Successfully');
         }
-        return $this->profile();
+        $addresses= request('address');
+        if(request('address')){
+            if(Address::whereIn('user_id',[Session::get('userId')])->first()){
+               $prevAddresses= Address::whereIn('user_id',[Session::get('userId')])->get();
+               if(count($addresses)<count($prevAddresses)){
+                   DB::delete('delete from address where user_id = ?', [Session::get('userId')]);
+                }
+                $prevAddresses= Address::whereIn('user_id',[Session::get('userId')])->get();
+               for($i=0;$i<count($prevAddresses);$i++){
+                    DB::update('update address set address = ? where id = ?', [$addresses[$i],$prevAddresses[$i]->id]);
+               }
+               for($i=count($prevAddresses);$i<count($addresses);$i++){
+                    DB::insert('insert into address (address_number,user_id, address) values (?, ?, ?)', [$i+1, Session::get('userId'), $addresses[$i]]);
+                    DB::commit();
+               }
+            } else{
+                for($i=0;$i<count($addresses);$i++){
+                    DB::insert('insert into address (address_number, user_id, address) values (?, ?, ?)', [$i+1, Session::get('userId'), $addresses[$i]]);
+                    DB::commit();
+                }
+            }
+        }
+        return redirect('/profile');
         
     }
 

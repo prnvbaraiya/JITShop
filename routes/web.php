@@ -27,14 +27,19 @@ Route::get('/contact',function(){
     return view('pages.contact');
 });
 Route::post('/register', 'App\Http\Controllers\UserController@store');
-Route::post('/login', 'App\Http\Controllers\UserController@check');
+Route::post('/login', 'App\Http\Controllers\UserController@check')->name('login');
 Route::get('/logout', 'App\Http\Controllers\UserController@logout');
 Route::get('/profile', 'App\Http\Controllers\UserController@profile');
 Route::get('/wallet', 'App\Http\Controllers\UserController@wallet');
 Route::get('/orderHistory', 'App\Http\Controllers\UserController@orderHistory');
-Route::post('/cart/{product}', 'App\Http\Controllers\CartController@store');
+
+Route::post('/cart', 'App\Http\Controllers\CartController@store');
 Route::get('/cart','App\Http\Controllers\CartController@index');
 Route::get('/cart/remove/{cart}','App\Http\Controllers\CartController@destroy');
+Route::get('/checkoutAddress','App\Http\Controllers\AddressController@index');
+Route::post('/paymentMethod','App\Http\Controllers\PaymentMethodController@show');
+Route::post('/makeOrder','App\Http\Controllers\PaymentMethodController@makeOrder');
+
 Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
 Route::get('/category/{category}','App\Http\Controllers\HomeController@category');
 Route::get('/product/{product}','App\Http\Controllers\HomeController@product');

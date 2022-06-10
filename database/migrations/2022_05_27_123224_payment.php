@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('status');
             $table->timestampTz('time', 0);
 
-            $table->foreign('order_id')->references('id')->on('order');
+            $table->foreign('order_id')->references('id')->on('ordert');
         });
     }
 

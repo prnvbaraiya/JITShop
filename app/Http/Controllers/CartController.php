@@ -14,27 +14,33 @@ class CartController extends Controller
     {
         return view('pages.cart');
     }
-    public function store(Product $product)
+    public function store()
     {
         $data = request()->all();
+        $product= $this->getProduct(request('product_id'));
+        DB::beginTransaction();
         $data = array_merge(
             $data,
             ['user_id'=> Session::get('userId')],
             ['product_id'=> $product->id]
         );
         $newQuantity= $product->quantity - request('quantity');
-        $newProductData = ['quantity'=>$newQuantity];
-        $product->update($newProductData);
-        $cartItems= Cart::whereIn('user_id',array(Session::get('userId')))->get();
-        for($i=0;$i<count($cartItems);$i++){
-            if($cartItems[$i]->product_id==$product->id){
-                $data['quantity']+=request('quantity');
-                DB::update('update cart set quantity = ? where user_id = ?', [$data['quantity'],$data['user_id']]);
-                return view('pages.cart',compact('cartItems'));
+        if($newQuantity>=0){
+            try{
+                DB::update('update product set quantity = ? where id = ?', array($newQuantity,$product->id));
+                $cartItem= DB::select('select * from cart where user_id = ? and product_id = ?', [Session::get('userId'),$product->id]);
+                if($cartItem){
+                    $cartItem[0]->quantity+=request('quantity');
+                    DB::update('update cart set quantity = ? where product_id = ? and user_id = ?', [$cartItem[0]->quantity,$product->id,$data['user_id']]);
+                } else{
+                    DB::insert('insert into cart (user_id, product_id, quantity)values (?, ?, ?)', [$data['user_id'],$data['product_id'],$data['quantity']]);
+                }
+                DB::commit();
+            } catch(Exception $e){
+                DB::rollback();
             }
         }
-        Cart::create($data);
-        return view('pages.cart',compact('cartItems'));
+        return redirect('/cart');
     }
 
     public static function getCart()
@@ -44,14 +50,21 @@ class CartController extends Controller
 
     public static function getProduct($product)
     {
-        $product= Product::whereIn('id',array($product))->first();
-        return $product;
+        return Product::whereIn('id',array($product))->first();
     }
 
     public function destroy(Cart $cart)
     {
-        
-        $cart->delete();
+        $product= $this->getProduct($cart->product_id);
+        DB::beginTransaction();
+        try{
+            $newQuantity= $product->quantity+$cart->quantity;
+            DB::update('update product set quantity = ? where id = ?', array($newQuantity,$product->id));
+            DB::delete('delete from cart where id = ?', [$cart->id]);
+            DB::commit();
+        } catch(Exception $e){
+            DB::rollback();
+        }
         return redirect('/cart');
     }
 }

@@ -74,7 +74,6 @@ class ProductController extends Controller
         $discounts = Discount::get();
         $attributes = Attribute::get();
         $selectedAttributes = get_object_vars(json_decode($product->attributes));
-        // dd($selectedAttributes);
         return view('admin.pages.product.edit',compact('categories','brands','discounts','product','attributes','selectedAttributes'));
     }
     

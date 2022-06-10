@@ -3,8 +3,9 @@
     <div class="profile_container">
         <div class="tab">
             <a href="/profile"><button class="tablinks">Profile</button></a>
-            <a href="wallet"><button class="tablinks">Wallet</button></a>
+            <a href="/wallet"><button class="tablinks">Wallet</button></a>
             <a href="/orderHistory"><button class="tablinks active">Order History</button></a>
+            <a href="/cart"><button class="tablinks">Cart</button></a>
         </div>
     </div>
     <div class="container">

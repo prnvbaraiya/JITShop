@@ -892,3 +892,11 @@ a {
 .tab button.active {
     background-color: #ccc;
 }
+
+.mt-1 {
+    margin-top: 0.5em;
+}
+
+.mt-3 {
+    margin-top: 2em;
+}
