@@ -13,8 +13,8 @@ class Order extends Model
         'user_id',
         'order_items_id',
         'address_id',
+        'status',
         'total',
-        'time'
     ];
 
 }

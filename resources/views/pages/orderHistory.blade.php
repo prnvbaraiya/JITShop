@@ -20,15 +20,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($contents as $content)
+                        @for ($j = count($orders) - 1; $j >= 0; $j--)
                             <tr>
                                 @for ($i = 0; $i < count($columns); $i++)
                                     <td style="max-width: 300px;" data-toggle="tooltip"
-                                        title="{{ $content[$columns[$i]] }}" class="py-1 text-truncate">
-                                        {{ $content[$columns[$i]] }}
+                                        title="{{ $orders[$j][$columns[$i]] }}" class="py-1 text-truncate">
+                                        {{ $orders[$j][$columns[$i]] }}
                                     </td>
                                 @endfor
-                        @endforeach
+                        @endfor
                         </tr>
                     </tbody>
                     <tfoot>

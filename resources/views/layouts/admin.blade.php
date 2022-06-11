@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +29,7 @@
 
 
     <!-- Fonts -->
-    
+
 
     <!-- CSS -->
     <link rel="stylesheet" href="/admino/vendors/mdi/css/materialdesignicons.min.css">
@@ -36,7 +37,8 @@
     <link rel="stylesheet" href="/admino/vendors/datatables.net-bs4/dataTables.bootstrap4.css">
     <link rel="stylesheet" href="/admino/css/style.css">
     <link rel="stylesheet" href="/admino/css/tableStyle.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
     <link rel="shortcut icon" href="/admino/images/favicon.png" />
 
@@ -46,10 +48,11 @@
             display: inline-block;
         }
     </style>
-    
-    
-        
+
+
+
 </head>
+
 <body>
     <div class="container-scroller">
         @include('admin.partial.header')
@@ -58,27 +61,28 @@
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
-                    <div class="col-md-12 stretch-card">
-                        <div class="card">
-                        <div class="card-body">
-                            @yield('content')
-                        </div>
+                        <div class="col-md-12 stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    @yield('content')
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>                
-            @include('admin.partial.footer')
+                @include('admin.partial.footer')
+            </div>
         </div>
-    </div>
-    <script>
-        var brand = document.getElementById('brand');
-        var parts = ['brand','category','discount','attributes','product','user','paymentMethod'];
-        for(var i=0;i<parts.length;i++){
-            if(window.location.href.includes(parts[i])){
-                var tmp = document.getElementById(parts[i]);
-                tmp.classList.add('active');
+        <script>
+            var brand = document.getElementById('brand');
+            var parts = ['orders', 'brand', 'category', 'discount', 'attributes', 'product', 'user', 'paymentMethod'];
+            for (var i = 0; i < parts.length; i++) {
+                if (window.location.href.includes(parts[i])) {
+                    var tmp = document.getElementById(parts[i]);
+                    tmp.classList.add('active');
+                }
             }
-        }
-    </script>
+        </script>
 </body>
+
 </html>

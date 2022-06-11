@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,15 +23,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-        
+
 </head>
+
 <body>
     @include('partial.header')
     <div id="app" style="margin-top: 120px">
         <main class="py-4">
-                @yield('content')
+            @yield('content')
         </main>
     </div>
     @include('partial.footer')
 </body>
+
 </html>

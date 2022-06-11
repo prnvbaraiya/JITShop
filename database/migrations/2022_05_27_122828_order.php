@@ -18,8 +18,10 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreignId('order_items_id');
             $table->foreignId('address_id');
+            $table->string('status')->default('pending');
             $table->integer('total');
-            $table->timestampTz('time', 0);
+            // $table->timestampTz('time', 0);
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('order_items_id')->references('id')->on('order_items');
