@@ -7,6 +7,8 @@ use \App\Models\Address;
 use \App\Models\Cart;
 use \App\Models\Product;
 use \App\Models\OrderItems;
+use \App\Models\Order;
+use \App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Session;
 
@@ -121,6 +123,30 @@ class PaymentMethodController extends Controller
         } catch (Exception $e) {
             DB::rollback();
         }
-        return redirect('/');
+        $orderId= Order::whereIn('order_items_id',[$orderItemsId])->first()->id;
+        return redirect('/makeOrder/'.$orderId);
+    }
+
+    public function receipt(Order $order){
+        $user= User::find($order->user_id);
+        $address= Address::find($order->address_id)->address;
+        $produtsIds= json_decode(OrderItems::find($order->order_items_id)->product_ids);
+        $quantities= json_decode(OrderItems::find($order->order_items_id)->quantity);
+        $products= [];
+        $price= [];
+        $total= [];
+        $data=[];
+        $orderTotal= 0;
+        for($i=0;$i<count($produtsIds);$i++)
+        {
+            $product= Product::find($produtsIds[$i]);
+            $data[$i]=[
+                'name'=> $product->name,
+                'quantity'=> $quantities[$i],
+                'price'=> $product->price,
+                'total'=> $product->price*$quantities[$i]
+            ];
+        }
+        return view('pages.receipt',compact('user','address','order','data'));
     }
 }

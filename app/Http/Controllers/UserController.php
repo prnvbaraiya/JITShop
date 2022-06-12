@@ -112,10 +112,14 @@ class UserController extends Controller
                 request()->session()->put('userName', $user->name);
                 return redirect('/');
             } else {
-                return redirect('/login')->with('message', 'Password is Wrong');
+                return redirect('/login')
+                        ->with('message', 'Password is Wrong')
+                        ->with('color', 'danger');
             }
         } else {
-            return redirect('/login')->with('message', 'email is not registered');
+            return redirect('/login')
+                        ->with('message', 'email is not registered')
+                        ->with('color', 'danger');
         }
     }
 
@@ -142,6 +146,13 @@ class UserController extends Controller
     {
         $tableName = 'Order History';
         $orders= Order::whereIn('user_id',[Session::get('userId')])->get();
+        $status= ['pending'=>'pending',
+                    'dispatch'=>'Ready To Dispatch',
+                    'onWay'=>'On The Way',
+                    'arrived'=>'Arrived Final Destination',
+                    'delivery'=>'Out for delivery',
+                    'cancelled'=>'Cancelled',
+                    'rejected'=>'Rejected'];
         for($i=0;$i<count($orders);$i++){
             $products= [];
             foreach(json_decode(OrderItems::find($orders[$i]['order_items_id'])->product_ids) as $product){
@@ -149,8 +160,9 @@ class UserController extends Controller
             }
             $orders[$i]['Products']= implode(', ',$products);
             $orders[$i]['orderId']= $orders[$i]['id'];
+            $orders[$i]['status']= $status[$orders[$i]['status']];
         }
-        $columns = ['orderId', 'Products', 'total', 'time'];
+        $columns = ['orderId', 'Products', 'total', 'updated_at','status'];
         return view('pages.orderHistory', compact('tableName', 'columns', 'orders'));
     }
 
@@ -162,10 +174,10 @@ class UserController extends Controller
     public function logout()
     {
         Session::flush();
-        if (Session::has('userId')) {
-            Session::pull('userId');
-            Session::pull('userName');
-        }
+        // if (Session::has('userId')) {
+        //     Session::pull('userId');
+        //     Session::pull('userName');
+        // }
         return redirect('/');
     }
 }
