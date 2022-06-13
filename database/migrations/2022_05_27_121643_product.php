@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('category_id');
             $table->foreignId('brand_id');
             $table->foreignId('discount_id');
+            $table->foreignId('vendor_id');
             $table->string('name');
             $table->text('details');
             $table->json('attributes');
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');
+            $table->foreign('vendor_id')->references('id')->on('vendor')->onDelete('cascade');
             $table->foreign('brand_id')->references('id')->on('brand')->onDelete('cascade');
             $table->foreign('discount_id')->references('id')->on('discount')->onDelete('cascade');
         });

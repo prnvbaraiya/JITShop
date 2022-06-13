@@ -14,4 +14,9 @@ class Address extends Model
         'address_number',
         'address'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

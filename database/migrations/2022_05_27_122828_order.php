@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('ordert', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
+            $table->foreignId('vendor_id');
             $table->foreignId('order_items_id');
             $table->foreignId('address_id');
             $table->string('status')->default('pending');
@@ -24,6 +25,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('vendor_id')->references('id')->on('vendor');
             $table->foreign('order_items_id')->references('id')->on('order_items');
             $table->foreign('address_id')->references('id')->on('address');
         });

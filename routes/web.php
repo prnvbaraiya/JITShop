@@ -39,8 +39,8 @@ Route::group(['middleware'=>'userAuth'],function(){
     Route::get('/cart/remove/{cart}', 'App\Http\Controllers\CartController@destroy');
     Route::get('/checkoutAddress', 'App\Http\Controllers\AddressController@index');
     Route::post('/paymentMethod', 'App\Http\Controllers\PaymentMethodController@show');
-    Route::post('/makeOrder', 'App\Http\Controllers\PaymentMethodController@makeOrder');    
-    Route::get('/makeOrder/{order}', 'App\Http\Controllers\PaymentMethodController@receipt');    
+    Route::post('/makeOrder', 'App\Http\Controllers\PaymentMethodController@makeOrder');
+    Route::get('/order/Complete/{order}', 'App\Http\Controllers\OrderController@receipt');    
 });
 
 
@@ -49,6 +49,37 @@ Route::get('/category/{category}', 'App\Http\Controllers\HomeController@category
 Route::get('/product/{product}', 'App\Http\Controllers\HomeController@product');
 
 // Route::group(['prefix' => 'admin',  'middleware' => 'adminAuth'],function(){
+
+Route::prefix('vendor')->group(function(){
+    Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
+        Route::get('/', 'signin');
+        Route::post('/', 'check');
+        Route::get('/signup', 'signup');
+        Route::post('/signup', 'store');
+        Route::get('/dashboard', 'view')->middleware('vendorAuth');
+        Route::get('/logout', 'logout')->middleware('vendorAuth');
+    });
+
+    Route::prefix('product')->group(function () {
+        Route::controller(App\Http\Controllers\VendorProductController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/add', 'add');
+            Route::post('/', 'store');
+            Route::get('{product}', 'edit');
+            Route::patch('{product}', 'update');
+            Route::get('delete/{product}', 'destroy');
+        });
+    });
+
+    Route::prefix('orders')->group(function () {
+        Route::controller(App\Http\Controllers\VendorOrderController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('{order}', 'edit');
+            Route::patch('{order}', 'update');
+        });
+    });
+});
+
 Route::prefix('admin')->group(function () {
 
     Route::controller(App\Http\Controllers\AdminController::class)->group(function () {
@@ -57,7 +88,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/signup', 'signup')->middleware('alreadyLogin');
         Route::post('/signup', 'store');
         Route::get('/dashboard', 'view')->middleware('adminAuth');
-        Route::get('/logout', 'logout');
+        Route::get('/logout', 'logout')->middleware('adminAuth');
     });
 
     Route::prefix('orders')->group(function () {

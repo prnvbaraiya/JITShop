@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Session;
 
@@ -16,6 +17,9 @@ class CartController extends Controller
     }
     public function store()
     {
+        if(!Session::has('cartId')){
+            Session::put('cartId',1);
+        }
         $data = request()->all();
         $product= $this->getProduct(request('product_id'));
         DB::beginTransaction();
@@ -64,6 +68,9 @@ class CartController extends Controller
             DB::commit();
         } catch(Exception $e){
             DB::rollback();
+        }
+        if(count(User::find(Session::get('userId'))->cartItems()->get())==0){
+            Session::forget('cartId');
         }
         return redirect('/cart');
     }

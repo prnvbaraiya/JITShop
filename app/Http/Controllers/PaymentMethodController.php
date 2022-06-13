@@ -92,6 +92,9 @@ class PaymentMethodController extends Controller
 
     public function makeOrder()
     {
+        if(!Session::has('cartId')){
+            return redirect('/');
+        }
         $data = request()->all();
         $cart = Cart::whereIn('user_id', [Session::get('userId')])->get();
         $orderItems = array_merge(
@@ -117,36 +120,15 @@ class PaymentMethodController extends Controller
             );
             $orderItemsId = OrderItems::whereIn('user_id', [Session::get('userId')])->get();
             $orderItemsId = $orderItemsId[count($orderItemsId) - 1]->id;
-            DB::insert('insert into ordert (user_id, order_items_id, address_id, total) values (?, ?, ?, ?)', [$data['user_id'], $orderItemsId, $data['address_id'], $total]);
+            DB::insert('insert into ordert (user_id, vendor_id, order_items_id, address_id, total) values (?, ?, ?, ?, ?)', [$data['user_id'], "vendor_id", $orderItemsId, $data['address_id'], $total]);
             DB::delete('delete from cart where user_id = ?', [Session::get('userId')]);
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
         }
+        Session::forget('cartId');
         $orderId= Order::whereIn('order_items_id',[$orderItemsId])->first()->id;
-        return redirect('/makeOrder/'.$orderId);
+        return redirect('/order/Complete/'.$orderId);
     }
 
-    public function receipt(Order $order){
-        $user= User::find($order->user_id);
-        $address= Address::find($order->address_id)->address;
-        $produtsIds= json_decode(OrderItems::find($order->order_items_id)->product_ids);
-        $quantities= json_decode(OrderItems::find($order->order_items_id)->quantity);
-        $products= [];
-        $price= [];
-        $total= [];
-        $data=[];
-        $orderTotal= 0;
-        for($i=0;$i<count($produtsIds);$i++)
-        {
-            $product= Product::find($produtsIds[$i]);
-            $data[$i]=[
-                'name'=> $product->name,
-                'quantity'=> $quantities[$i],
-                'price'=> $product->price,
-                'total'=> $product->price*$quantities[$i]
-            ];
-        }
-        return view('pages.receipt',compact('user','address','order','data'));
-    }
 }

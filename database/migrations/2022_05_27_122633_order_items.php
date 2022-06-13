@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->text('product_ids');
+            $table->text('vendor_ids');
             $table->text('quantity');
             $table->unsignedBigInteger('total');
 

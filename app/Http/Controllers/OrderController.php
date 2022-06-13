@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItems;
-use App\Models\Products;
+use App\Models\User;
+use App\Models\Address;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -34,5 +36,33 @@ class OrderController extends Controller
         $data= request()->all();
         $order->update($data);
         return redirect('/admin/orders');
+    }
+
+    public function receipt(Order $order){
+        $user= User::find($order->user_id);
+        $address= Address::find($order->address_id)->address;
+        $produtsIds= json_decode(OrderItems::find($order->order_items_id)->product_ids);
+        $quantities= json_decode(OrderItems::find($order->order_items_id)->quantity);
+        $products= [];
+        $price= [];
+        $total= [];
+        $data=[];
+        $orderTotal= 0;
+        for($i=0;$i<count($produtsIds);$i++)
+        {
+            $product= Product::find($produtsIds[$i]);
+            $data[$i]=[
+                'name'=> $product->name,
+                'quantity'=> $quantities[$i],
+                'price'=> $product->price,
+                'total'=> $product->price*$quantities[$i]
+            ];
+        }
+        return view('pages.receipt',compact('user','address','order','data'));
+    }
+    
+    public function thankYou()
+    {
+        return view('pages.ThankYou');
     }
 }

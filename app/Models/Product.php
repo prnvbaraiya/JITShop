@@ -15,6 +15,7 @@ class Product extends Model
         'category_id',
         'brand_id',
         'discount_id',
+        'vendor_id',
         'name',
         'details',
         'attributes',
@@ -31,5 +32,10 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }
