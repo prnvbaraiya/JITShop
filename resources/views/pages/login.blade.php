@@ -23,7 +23,8 @@
                     <form method="post">
                         @csrf
                         <div>
-                            <input type="text" name="email" placeholder="Email" class="form-control" />
+                            <input type="text" value="{{ old('email') }}" name="email" placeholder="Email"
+                                class="form-control" />
                         </div>
                         <div>
                             <input type="password" name="password" placeholder="Password" class="form-control" />
@@ -44,13 +45,16 @@
                     <form action="/register" method="post">
                         @csrf
                         <div>
-                            <input type="text" name="name" placeholder="Enter Name" class="form-control" />
+                            <input type="text" value="{{ old('name') }}" name="name" placeholder="Enter Name"
+                                class="form-control" />
                         </div>
                         <div>
-                            <input type="text" name="email" placeholder="Email" class="form-control" />
+                            <input type="text" value="{{ old('email') }}" name="email" placeholder="Email"
+                                class="form-control" />
                         </div>
                         <div>
-                            <input type="text" name="mobile" placeholder="Contact" class="form-control" />
+                            <input type="text" value="{{ old('mobile') }}" name="mobile" placeholder="Contact"
+                                class="form-control" />
                         </div>
                         <div>
                             <input type="password" name="password" placeholder="Password" class="form-control" />

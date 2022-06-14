@@ -31,6 +31,9 @@
                         <button class="btnn">Buy Now</button>
                     </div>
                 </form>
+                <div class="row mt-3">
+                    Seller : <label class="text-capitalize"> {{ $product->vendor->name }}</label>
+                </div>
                 <script>
                     function addItems(event, operation) {
                         event.preventDefault();

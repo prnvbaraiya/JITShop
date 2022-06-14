@@ -18,7 +18,7 @@
                             <em>Date: {{ substr($order->time, 0, 11) }}</em>
                         </p>
                         <p>
-                            <em>Receipt #: {{ $order->id }}</em>
+                            <em>Receipt #: {{ $orderItems->id }}</em>
                         </p>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                                     <h4><strong>Total: </strong></h4>
                                 </td>
                                 <td class="text-center text-danger">
-                                    <h4><strong>{{ $order->total }}</strong></h4>
+                                    <h4><strong>{{ $orderItems->total }}</strong></h4>
                                 </td>
                             </tr>
                         </tbody>

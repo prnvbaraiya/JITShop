@@ -48,7 +48,7 @@ class VendorController extends Controller
     public function store(){
         $data = request()->validate([
             'name'=>'required',
-            'email'=>'required',
+            'email'=>'required|unique:vendor',
             'password'=>['required']
         ]);
         $hashedPassword = Hash::make(request()->password);

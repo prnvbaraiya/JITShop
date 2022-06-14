@@ -45,6 +45,7 @@ Route::group(['middleware'=>'userAuth'],function(){
 
 
 Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
+Route::post('/add/address', 'App\Http\Controllers\UserController@addNewAddress');
 Route::get('/category/{category}', 'App\Http\Controllers\HomeController@category');
 Route::get('/product/{product}', 'App\Http\Controllers\HomeController@product');
 

@@ -29,7 +29,21 @@
                 </div>
             </form>
         @else
-            <h2>To Add Address Visit <a href="/profile">Profile Page</a></h2>
+            <form action="/add/address" method="post">
+                @csrf
+                <div class="row" style="margin-top: 30px;" id="address">
+                    <div class="col-md-4">
+                        <label style="margin-bottom:0px;vertical-align: baseline;margin-top:15px">Address 1</label>
+                    </div>
+                    <div class="col-md-8">
+                        <textarea name="address" rows="5" class="col-md-8" placeholder="Enter Address"></textarea>
+                    </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8 mt-3">
+                        <button class="btn btn-primary">Add Payment Method</button>
+                    </div>
+                </div>
+            </form>
         @endif
     </div>
 @endsection

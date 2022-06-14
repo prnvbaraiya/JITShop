@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\Vendor;
 use App\Models\Discount;
 use App\Models\Product;
+use App\Models\PaymentMethod;
 use App\Models\Attribute;
 
 class DatabaseSeeder extends Seeder
@@ -20,6 +21,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        PaymentMethod::create([
+            'name'=>'cash',
+            'available'=>1
+        ]);
         Attribute::create([
             'name' => 'Color',
             'value' => 'red,black,white,yellow,green'

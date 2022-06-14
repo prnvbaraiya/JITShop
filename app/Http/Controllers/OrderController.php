@@ -38,15 +38,14 @@ class OrderController extends Controller
         return redirect('/admin/orders');
     }
 
-    public function receipt(Order $order){
-        $user= User::find($order->user_id);
-        $address= Address::find($order->address_id)->address;
-        $produtsIds= json_decode(OrderItems::find($order->order_items_id)->product_ids);
-        $quantities= json_decode(OrderItems::find($order->order_items_id)->quantity);
-        $products= [];
-        $price= [];
-        $total= [];
-        $data=[];
+    public function receipt($orderItems)
+    {
+        $orderItems= OrderItems::find($orderItems);
+        $user= User::find($orderItems->user_id);
+        $order= Order::whereIn('order_items_id',$orderItems)->first();
+        $address= $order->address;
+        $produtsIds= json_decode($orderItems->product_ids);
+        $quantities= json_decode($orderItems->quantity);
         $orderTotal= 0;
         for($i=0;$i<count($produtsIds);$i++)
         {
@@ -58,7 +57,7 @@ class OrderController extends Controller
                 'total'=> $product->price*$quantities[$i]
             ];
         }
-        return view('pages.receipt',compact('user','address','order','data'));
+        return view('pages.receipt',compact('user','address','orderItems','order','data'));
     }
     
     public function thankYou()

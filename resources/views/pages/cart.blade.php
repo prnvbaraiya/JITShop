@@ -44,8 +44,11 @@
                                                         src="{{ $product->image }}" style="width: 72px; height: 72px;">
                                                 </a>
                                                 <div class="media-body">
-                                                    <h4 class="media-heading"><a
-                                                            href="/product/{{ $product->id }}">{{ $product->name }}</a>
+                                                    <h4 class="media-heading"><b><a
+                                                                href="/product/{{ $product->id }}">{{ $product->name }}</a></b>
+                                                        <br>
+                                                        <br>
+                                                        Seller: <b>{{ $product->vendor->name }}</b>
                                                     </h4>
                                                 </div>
                                             </div>

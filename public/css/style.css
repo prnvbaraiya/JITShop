@@ -826,8 +826,10 @@ input[type="password"] {
     display: flex;
     flex-direction: column;
 }
-.product__container img {
+.product__image img {
     height: 100%;
+    width: 100%;
+    margin: 10px;
     aspect-ratio: 1/1;
 }
 

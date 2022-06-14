@@ -62,7 +62,8 @@
                                 </div>
                                 <div class="col-md-8">
                                     <textarea name="address[]" rows="5" class="col-md-8" placeholder="Enter Address">{{ $address->address }}</textarea>
-                                    <button class="btn btn-danger" onclick="yoo(event)" style="margin-left: 5px;">-</button>
+                                    <button class="btn btn-danger" onclick="remove(event)"
+                                        style="margin-left: 5px;">-</button>
                                 </div>
                             </div>
                         @endforeach
@@ -85,11 +86,13 @@
                         main.innerHTML += getString(count);
                     }
 
-                    function yoo(event) {
+                    function remove(event) {
                         event.preventDefault();
                         var main = document.getElementById('address' + count);
-                        count--;
-                        main.remove();
+                        if (count > 1) {
+                            count--;
+                            main.remove();
+                        }
                     }
 
                     function getString(count) {
@@ -100,7 +103,7 @@
                         content +=
                             '<div class="col-md-8 mt-1"><textarea name="address[]" rows="5" class="col-md-8" placeholder="Enter Address"></textarea>';
                         content +=
-                            '<button class="btn btn-danger" onclick="yoo(event)" style="margin-left: 5px;">-</button></div></div>';
+                            '<button class="btn btn-danger" onclick="remove(event)" style="margin-left: 5px;">-</button></div></div>';
                         return content;
                     }
                 </script>

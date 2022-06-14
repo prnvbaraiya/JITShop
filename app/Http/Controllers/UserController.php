@@ -86,10 +86,16 @@ class UserController extends Controller
         return redirect('/profile');
     }
 
-    public function addNewAddress($index,$addresses)
+    public function addNewAddress($index=0,$addresses=[])
     {
+        $len= strlen(request()->url());
         for ($i = $index; $i < count($addresses); $i++) {
             DB::insert('insert into address (address_number, user_id, address) values (?, ?, ?)', [$i + 1, Session::get('userId'), $addresses[$i]]);
+        }
+        if(substr(request()->url(),$len-12,$len-1)=="/add/address"){
+            $addresses= request('address');
+            DB::insert('insert into address (address_number, user_id, address) values (?, ?, ?)', [$i + 1, Session::get('userId'), $addresses]);
+            return redirect('/checkoutAddress');
         }
     }
 
@@ -154,15 +160,11 @@ class UserController extends Controller
                     'cancelled'=>'Cancelled',
                     'rejected'=>'Rejected'];
         for($i=0;$i<count($orders);$i++){
-            $products= [];
-            foreach(json_decode(OrderItems::find($orders[$i]['order_items_id'])->product_ids) as $product){
-                array_push($products,Product::find($product)->name);
-            }
-            $orders[$i]['Products']= implode(', ',$products);
-            $orders[$i]['orderId']= $orders[$i]['id'];
+            $orders[$i]['orderId']= $orders[$i]['order_items_id'];
+            $orders[$i]['Products']= Product::find($orders[$i]['product_id'])->name;
             $orders[$i]['status']= $status[$orders[$i]['status']];
         }
-        $columns = ['orderId', 'Products', 'total', 'updated_at','status'];
+        $columns = ['orderId', 'Products', 'total', 'time','status'];
         return view('pages.orderHistory', compact('tableName', 'columns', 'orders'));
     }
 

@@ -8,14 +8,17 @@ use App\Models\OrderItems;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
+use Session;
 
 class VendorOrderController extends Controller
 {
     public function index()
     {
-        $orders= Order::orderBy('updated_at','DESC')->get();
+        $orders= DB::select('select * from ordert where vendor_id = ? order by time desc', [Session::get('vendorId')]);
         $columns = ['id','user_id', 'total', 'status', 'Edit', 'Delete'];
         $tableName= 'Orders';
+        $orders= json_decode(json_encode($orders), true);
         return view('vendor.pages.orders.index',compact('columns','orders','tableName'));
     }
 
