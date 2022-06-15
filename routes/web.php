@@ -19,7 +19,8 @@ Route::get('/', function () {
 
 Route::get('/login', function () {
     return view('pages.login');
-});
+})->middleware('alreadyLogin');
+
 Route::get('/about', function () {
     return view('pages.about');
 });
@@ -39,8 +40,10 @@ Route::group(['middleware'=>'userAuth'],function(){
     Route::get('/cart/remove/{cart}', 'App\Http\Controllers\CartController@destroy');
     Route::get('/checkoutAddress', 'App\Http\Controllers\AddressController@index');
     Route::post('/paymentMethod', 'App\Http\Controllers\PaymentMethodController@show');
-    Route::post('/makeOrder', 'App\Http\Controllers\PaymentMethodController@makeOrder');
-    Route::get('/order/Complete/{order}', 'App\Http\Controllers\OrderController@receipt');    
+    Route::post('/makeOrder', 'App\Http\Controllers\OrderController@makeOrder');
+    Route::get('/order/complete/{order}', 'App\Http\Controllers\OrderController@receipt');    
+    Route::get('/order/cancel/{order}', 'App\Http\Controllers\OrderController@cancelOrder');    
+
 });
 
 
@@ -53,9 +56,9 @@ Route::get('/product/{product}', 'App\Http\Controllers\HomeController@product');
 
 Route::prefix('vendor')->group(function(){
     Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
-        Route::get('/', 'signin');
+        Route::get('/', 'signin')->middleware('alreadyLogin');
         Route::post('/', 'check');
-        Route::get('/signup', 'signup');
+        Route::get('/signup', 'signup')->middleware('alreadyLogin');
         Route::post('/signup', 'store');
         Route::get('/dashboard', 'view')->middleware('vendorAuth');
         Route::get('/logout', 'logout')->middleware('vendorAuth');

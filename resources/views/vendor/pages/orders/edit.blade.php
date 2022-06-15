@@ -21,13 +21,20 @@
                             <label>Status</label>
                         </div>
                         <div class="col-sm-9">
-                            <select name="status" class="form-control">
-                                @foreach (array_keys($status) as $st)
-                                    <option value="{{ $st }}" @if ($st == $order->status) selected @endif>
-                                        {{ $status[$st] }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            @if ($order->status != 'cancelled')
+                                <select name="status" class="form-control">
+                                    @foreach (array_keys($status) as $st)
+                                        <option value="{{ $st }}"
+                                            @if ($st == $order->status) selected @endif>
+                                            {{ $status[$st] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <select name="status" class="form-control" disabled>
+                                    <option value="cancelled">Cancelled</option>
+                                </select>
+                            @endif
                         </div>
                     </div>
                     <div class="text-center mt-3">

@@ -902,3 +902,15 @@ a {
 .mt-3 {
     margin-top: 2em;
 }
+
+#dtBasicExample {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#dtBasicExample td,
+#dtBasicExample th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}

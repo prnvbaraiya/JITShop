@@ -18,7 +18,12 @@ class AlreadyLogin
     {
         if($request->session()->has('loginId')){
             return redirect('/admin/dashboard');
+        } elseif($request->session()->has('vendorId')) {
+            return redirect('/vendor/dashboard');
+        } elseif($request->session()->has('userId')) {
+            return redirect('/');
+        } else{
+            return $next($request);
         }
-        return $next($request);
     }
 }

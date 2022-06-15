@@ -42,7 +42,7 @@ class AdminController extends Controller
         $admin = Admin::where('email','=',$data['email'])->first();
         request()->session()->put('loginId',$admin->id);
         request()->session()->put('adminName',$admin->name);
-        return view('admin.pages.index');
+        return redirect('/admin/dashboard');
     }
 
     public function check()
@@ -58,7 +58,7 @@ class AdminController extends Controller
             {
                 request()->session()->put('loginId',$admin->id);
                 request()->session()->put('adminName',$admin->name);
-                return view('admin.pages.index');
+                return redirect('/admin/dashboard');
             }
             else
             {

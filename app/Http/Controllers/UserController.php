@@ -156,16 +156,18 @@ class UserController extends Controller
                     'dispatch'=>'Ready To Dispatch',
                     'onWay'=>'On The Way',
                     'arrived'=>'Arrived Final Destination',
+                    'delivered'=>'Product Delivered',
                     'delivery'=>'Out for delivery',
                     'cancelled'=>'Cancelled',
                     'rejected'=>'Rejected'];
         for($i=0;$i<count($orders);$i++){
             $orders[$i]['orderId']= $orders[$i]['order_items_id'];
-            $orders[$i]['Products']= Product::find($orders[$i]['product_id'])->name;
+            $orders[$i]['product']= Product::find($orders[$i]['product_id'])->name;
             $orders[$i]['status']= $status[$orders[$i]['status']];
         }
-        $columns = ['orderId', 'Products', 'total', 'time','status'];
-        return view('pages.orderHistory', compact('tableName', 'columns', 'orders'));
+        $columns = ['Products', 'total', 'time','status'];
+        $color= true;
+        return view('pages.orderHistory', compact('tableName', 'columns', 'orders','color'));
     }
 
     public static function getUser($id)

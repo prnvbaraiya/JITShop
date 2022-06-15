@@ -16,9 +16,13 @@ class VendorOrderController extends Controller
     public function index()
     {
         $orders= DB::select('select * from ordert where vendor_id = ? order by time desc', [Session::get('vendorId')]);
-        $columns = ['id','user_id', 'total', 'status', 'Edit', 'Delete'];
+        $columns = ['Orderid','user_id','product_name', 'total', 'status', 'Edit', 'Delete'];
         $tableName= 'Orders';
         $orders= json_decode(json_encode($orders), true);
+        for($i=0;$i<count($orders);$i++){
+            $orders[$i]['Orderid']= $orders[$i]['order_items_id'];
+            $orders[$i]['product_name']= Product::find($orders[$i]['product_id'])->name;
+        }
         return view('vendor.pages.orders.index',compact('columns','orders','tableName'));
     }
 
@@ -29,7 +33,7 @@ class VendorOrderController extends Controller
                     'onWay'=>'On The Way',
                     'arrived'=>'Arrived Final Destination',
                     'delivery'=>'Out for delivery',
-                    'cancelled'=>'Cancelled',
+                    'delivered'=>'Product Delivered',
                     'rejected'=>'Rejected'];
         return view('vendor.pages.orders.edit',compact('order','status'));
     }

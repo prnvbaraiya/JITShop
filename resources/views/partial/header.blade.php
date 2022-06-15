@@ -37,11 +37,8 @@
                         <li><a href="/login"><span class="glyphicon glyphicon-list-alt"> </span> Register</a></li>
                     @else
                         <li class="dropdown">
-                            <a href="/profile" class="dropdown-toggle">{{ Session::get('userName') }}<b
-                                    class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/logout">Logout</a></li>
-                            </ul>
+                            <a href="/profile"><span class="glyphicon glyphicon-user"> </span>
+                                &nbsp{{ Session::get('userName') }}</a>
                         </li>
                     @endif
                 </ul>

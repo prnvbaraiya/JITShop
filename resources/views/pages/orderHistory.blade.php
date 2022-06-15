@@ -11,34 +11,50 @@
     <div class="container">
         <div class="col-md-12 login">
             <div class="table-responsive" style="margin-top:50px;">
-                <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="20" width="100%">
+                <table id="dtBasicExample">
                     <thead>
                         <tr>
+                            <th class="text-capitalize">Order Id</th>
                             @foreach ($columns as $column)
-                                <th class="th-sm text-capitalize">{{ $column }}</th>
+                                <th class="text-capitalize">{{ $column }}</th>
                             @endforeach
+                            <th class="text-capitalize">Cancel</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for ($j = count($orders) - 1; $j >= 0; $j--)
-                            <tr>
-                                @for ($i = 0; $i < count($columns); $i++)
+                            @if ($j > 0 && $j != count($orders) - 1 && $orders[$j]['orderId'] != $orders[$j + 1]['orderId'])
+                                <?php $color = !$color; ?>
+                            @endif
+                            <tr style="background: @if ($color) lightgrey @endif;">
+                                <td style="max-width: 300px;" data-toggle="tooltip" title="{{ $orders[$j]['orderId'] }}"
+                                    class="py-1 text-truncate">
+                                    @if ($j == count($orders) - 1)
+                                        {{ $orders[$j]['orderId'] }}
+                                    @elseif ($j > 0 && $orders[$j]['orderId'] != $orders[$j + 1]['orderId'])
+                                        {{ $orders[$j]['orderId'] }}
+                                    @endif
+                                </td>
+                                <td style="max-width: 300px;" data-toggle="tooltip" title="{{ $orders[$j]['product'] }}"
+                                    class="py-1 text-truncate">
+                                    <a href="/product/{{ $orders[$j]['product_id'] }}">
+                                        {{ $orders[$j]['product'] }}
+                                    </a>
+                                </td>
+                                @for ($i = 1; $i < count($columns); $i++)
                                     <td style="max-width: 300px;" data-toggle="tooltip"
                                         title="{{ $orders[$j][$columns[$i]] }}" class="py-1 text-truncate">
                                         {{ $orders[$j][$columns[$i]] }}
                                     </td>
                                 @endfor
+                                <td>
+                                    <a href="/order/cancel/{{ $orders[$j]['id'] }}" class="btn btn-danger"
+                                        @if ($orders[$j]['status'] == 'Cancelled' || $orders[$j]['status'] == 'Rejected' || $orders[$j]['status'] == 'Product Delivered') @disabled(true) @endif>
+                                        Cancel Order</a>
+                                </td>
+                            </tr>
                         @endfor
-                        </tr>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            @foreach ($columns as $column)
-                                <th class="th-sm text-capitalize">{{ $column }}
-                                </th>
-                            @endforeach
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>

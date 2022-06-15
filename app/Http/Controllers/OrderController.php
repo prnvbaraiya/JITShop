@@ -8,6 +8,9 @@ use App\Models\OrderItems;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Product;
+use \App\Models\PaymentMethod;
+use \App\Models\Cart;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -19,6 +22,52 @@ class OrderController extends Controller
         return view('admin.pages.orders.index',compact('columns','orders','tableName'));
     }
 
+    public function makeOrder()
+    {
+        if(!Session::has('cartId')){
+            return redirect('/');
+        }
+        $data = request()->all();
+        DB::beginTransaction();
+        $cart = Cart::whereIn('user_id', [Session::get('userId')])->get();
+        $orderItems = array_merge(
+            ['user_id' => Session::get('userId')],
+        );
+        $total = 0;
+        for ($i = 0; $i < count($cart); $i++) {
+            $productIds[$i]= $cart[$i]->product_id;
+            $pro= Product::find($productIds[$i]);
+            $vendorIds[$i]= $pro->vendor()->first()->id;
+            $quantities[$i] = $cart[$i]->quantity;
+            $total += $quantities[$i] * $pro->price;
+        }
+        $productIds = json_encode($productIds);
+        $quantities = json_encode($quantities);
+        $vendorIds = json_encode($vendorIds);
+        try {
+            DB::insert('insert into order_items (user_id, product_ids, vendor_ids, quantity, total) values (?, ?, ?, ?, ?)', [Session::get('userId'), $productIds, $vendorIds, $quantities, $total]);
+            $data = array_merge(
+                $data,
+                ['user_id' => Session::get('userId')],
+                ['total' => $total],
+            );
+            $orderItemsId = OrderItems::whereIn('user_id', [Session::get('userId')])->get();
+            $orderItemsId = $orderItemsId[count($orderItemsId) - 1]->id;
+            for($i=0;$i<count($cart);$i++){
+                $productId= $cart[$i]->product_id;
+                $pro= Product::find($cart[$i]->product_id);
+                $total = $cart[$i]->quantity * $pro->price;
+                DB::insert('insert into ordert (user_id, vendor_id, order_items_id, product_id, quantity, address, total) values (?, ?, ?, ?, ?, ?, ?)', [$data['user_id'], $pro->vendor()->first()->id, $orderItemsId, $productId, $cart[$i]->quantity,Address::find($data['address_id'])->address, $total]);
+            }
+            DB::delete('delete from cart where user_id = ?', [Session::get('userId')]);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+        }
+        Session::forget('cartId');
+        return redirect('/order/complete/'.$orderItemsId);
+    }
+
     public function edit(Order $order)
     {
         $status= ['pending'=>'pending',
@@ -27,6 +76,7 @@ class OrderController extends Controller
                     'arrived'=>'Arrived Final Destination',
                     'delivery'=>'Out for delivery',
                     'cancelled'=>'Cancelled',
+                    'delivered'=>'Product Delivered',
                     'rejected'=>'Rejected'];
         return view('admin.pages.orders.edit',compact('order','status'));
     }
@@ -63,5 +113,14 @@ class OrderController extends Controller
     public function thankYou()
     {
         return view('pages.ThankYou');
+    }
+
+    public function cancelOrder(Order $order){
+        $data=(
+            ['status'=>'cancelled']
+        );
+        $order->update($data);
+        return redirect('/orderHistory');
+
     }
 }
