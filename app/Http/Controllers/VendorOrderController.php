@@ -16,7 +16,7 @@ class VendorOrderController extends Controller
     public function index()
     {
         $orders= DB::select('select * from ordert where vendor_id = ? order by time desc', [Session::get('vendorId')]);
-        $columns = ['Orderid','user_id','product_name', 'total', 'status', 'Edit', 'Delete'];
+        $columns = ['Orderid','user_id','product_name', 'total', 'status'];
         $tableName= 'Orders';
         $orders= json_decode(json_encode($orders), true);
         for($i=0;$i<count($orders);$i++){

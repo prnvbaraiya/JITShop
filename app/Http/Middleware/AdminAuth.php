@@ -17,7 +17,7 @@ class AdminAuth
     public function handle(Request $request, Closure $next)
     {
         if(!$request->session()->has('loginId')){
-            return redirect('/');
+            return abort('403');
         }
         return $next($request);
     }

@@ -13,25 +13,31 @@
                                 @foreach ($columns as $column)
                                     <th class="th-sm text-capitalize">{{ $column }}</th>
                                 @endforeach
+                                <th class="th-sm text-capitalize">Edit</th>
+                                @if ($tableName != 'orders')
+                                    <th class="th-sm text-capitalize">Delete</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($contents as $content)
                                 <tr>
-                                    @for ($i = 0; $i < count($columns) - 2; $i++)
+                                    @for ($i = 0; $i < count($columns); $i++)
                                         <td style="max-width: 300px;" data-toggle="tooltip"
                                             title="{{ $content[$columns[$i]] }}" class="py-1 text-truncate">
                                             {{ $content[$columns[$i]] }}
                                         </td>
                                     @endfor
                                     <td class="th-sm"><a
-                                            href="/admin/{{ $tableName }}/{{ $content['id'] }}"><button
+                                            href="/vendor/{{ $tableName }}/{{ $content['id'] }}"><button
                                                 class="btn btn-primary">Edit</button></a>
                                     </td>
-                                    <td class="th-sm"><a
-                                            href="/admin/{{ $tableName }}/delete/{{ $content['id'] }}"><button
-                                                class="btn btn-danger">Delete</button></a>
-                                    </td>
+                                    @if ($tableName != 'orders')
+                                        <td class="th-sm"><a
+                                                href="/vendor/{{ $tableName }}/delete/{{ $content['id'] }}"><button
+                                                    class="btn btn-danger">Delete</button></a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -41,6 +47,10 @@
                                     <th class="th-sm text-capitalize">{{ $column }}
                                     </th>
                                 @endforeach
+                                <th class="th-sm text-capitalize">Edit</th>
+                                @if ($tableName != 'orders')
+                                    <th class="th-sm text-capitalize">Delete</th>
+                                @endif
                             </tr>
                         </tfoot>
                     </table>

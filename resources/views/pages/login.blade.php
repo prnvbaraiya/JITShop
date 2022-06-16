@@ -6,15 +6,15 @@
                 @if (session('message'))
                     <div class="alert alert-{{ session('color') }} alert-dismissible py-4" style="margin-top: 50px;"
                         role="alert">
-                        <button style="right:0;" type="button" class="close" data-dismiss="alert"
-                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button style="right:0;" type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         {{ session('message') }}
                     </div>
                 @endif
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible py-4" style="margin-top: 50px;" role="alert">
-                        <button style="right:0;" type="button" class="close" data-dismiss="alert"
-                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button style="right:0;" type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -22,6 +22,16 @@
                     <h1>Login</h1>
                     <form method="post">
                         @csrf
+                        <div style="display: flex;justify-content: space-evenly;margin:20px 0px;">
+                            <div>
+                                <input type="radio" id="vendor" name="loginType" value="vendor">
+                                <label for="vendor">Vendor</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="user" name="loginType" value="user" checked>
+                                <label for="user">User</label>
+                            </div>
+                        </div>
                         <div>
                             <input type="text" value="{{ old('email') }}" name="email" placeholder="Email"
                                 class="form-control" />
@@ -44,6 +54,16 @@
                     <h1>Register</h1>
                     <form action="/register" method="post">
                         @csrf
+                        <div style="display: flex;justify-content: space-evenly;margin:20px 0px;">
+                            <div>
+                                <input type="radio" id="vendor" name="loginType" value="vendor">
+                                <label for="vendor">Vendor</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="user" name="loginType" value="user" checked>
+                                <label for="user">User</label>
+                            </div>
+                        </div>
                         <div>
                             <input type="text" value="{{ old('name') }}" name="name" placeholder="Enter Name"
                                 class="form-control" />

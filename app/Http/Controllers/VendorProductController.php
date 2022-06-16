@@ -22,7 +22,7 @@ class VendorProductController extends Controller
     public function index()
     {
         $products= Product::whereIn('vendor_id',[Session::get('vendorId')])->get();
-        $columns= ['id', 'category_name', 'name', 'price', 'quantity', 'Edit', 'Delete'];
+        $columns= ['id', 'category_name', 'name', 'price', 'quantity'];
         return view('vendor.pages.product.index',compact('products','columns'));
     }
 
@@ -33,8 +33,7 @@ class VendorProductController extends Controller
         $discounts = Discount::get();
         $products = Product::get();
         $attributes = Attribute::get();
-        $columns = ['id', 'category_id', 'brand_id', 'discount_id', 'name', 'details', 'attributes', 'price', 'quantity', 'Edit', 'Delete'];
-        return view('vendor.pages.product.add', compact('categories', 'brands', 'discounts', 'attributes', 'products', 'columns'));
+        return view('vendor.pages.product.add', compact('categories', 'brands', 'discounts', 'attributes', 'products'));
     }
 
     public function store()

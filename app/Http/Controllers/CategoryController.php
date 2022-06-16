@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::get();
-        $columns = ['id','name','Edit','Delete'];
+        $columns = ['id','name'];
         return view('admin.pages.category.index',compact('categories','columns'));
     }
 

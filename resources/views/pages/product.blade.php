@@ -21,7 +21,8 @@
                     @csrf
                     <div class="row">
                         <button class="btn" style="margin-left: 15px;" onClick="addItems(event,'add')">+</button>
-                        <input type="number" id="items" name="quantity" value="1" style="width: 30px;" readonly="readonly">
+                        <input type="number" id="items" name="quantity" value="1" style="width: 30px;"
+                            readonly="readonly">
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <button class="btn" onClick="addItems(event,'sub')">-</button>
                     </div>

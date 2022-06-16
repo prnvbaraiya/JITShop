@@ -2,20 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-Route::get('/', function () {
-    return view('pages.index');
-});
+Route::get('/', 'App\Http\Controllers\HomeController@index');
 
 Route::get('/login', function () {
     return view('pages.login');
@@ -28,38 +15,36 @@ Route::get('/contact', function () {
     return view('pages.contact');
 });
 Route::post('/register', 'App\Http\Controllers\UserController@store');
+// Route::get('/register', 'App\Http\Controllers\UserController@tmp');
 Route::post('/login', 'App\Http\Controllers\UserController@check')->name('login');
 
 Route::group(['middleware'=>'userAuth'],function(){
     Route::get('/profile', 'App\Http\Controllers\UserController@profile');
+    Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
+    Route::post('/add/address', 'App\Http\Controllers\UserController@addNewAddress');
     Route::get('/orderHistory', 'App\Http\Controllers\UserController@orderHistory');
     Route::get('/wallet', 'App\Http\Controllers\UserController@wallet');
     Route::get('/logout', 'App\Http\Controllers\UserController@logout');
-    Route::post('/cart', 'App\Http\Controllers\CartController@store');
     Route::get('/cart', 'App\Http\Controllers\CartController@index');
+    Route::post('/cart', 'App\Http\Controllers\CartController@store');
     Route::get('/cart/remove/{cart}', 'App\Http\Controllers\CartController@destroy');
     Route::get('/checkoutAddress', 'App\Http\Controllers\AddressController@index');
     Route::post('/paymentMethod', 'App\Http\Controllers\PaymentMethodController@show');
     Route::post('/makeOrder', 'App\Http\Controllers\OrderController@makeOrder');
     Route::get('/order/complete/{order}', 'App\Http\Controllers\OrderController@receipt');    
     Route::get('/order/cancel/{order}', 'App\Http\Controllers\OrderController@cancelOrder');    
-
 });
 
-
-Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
-Route::post('/add/address', 'App\Http\Controllers\UserController@addNewAddress');
-Route::get('/category/{category}', 'App\Http\Controllers\HomeController@category');
+Route::get('/category/{content}', 'App\Http\Controllers\HomeController@products');
+Route::get('/seller/{content}', 'App\Http\Controllers\HomeController@seller');
 Route::get('/product/{product}', 'App\Http\Controllers\HomeController@product');
-
-// Route::group(['prefix' => 'admin',  'middleware' => 'adminAuth'],function(){
 
 Route::prefix('vendor')->group(function(){
     Route::controller(App\Http\Controllers\VendorController::class)->group(function () {
         Route::get('/', 'signin')->middleware('alreadyLogin');
         Route::post('/', 'check');
-        Route::get('/signup', 'signup')->middleware('alreadyLogin');
-        Route::post('/signup', 'store');
+        // Route::get('/signup', 'signup')->middleware('alreadyLogin');
+        // Route::post('/signup', 'store');
         Route::get('/dashboard', 'view')->middleware('vendorAuth');
         Route::get('/logout', 'logout')->middleware('vendorAuth');
     });

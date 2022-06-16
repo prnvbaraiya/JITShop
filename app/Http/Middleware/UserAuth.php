@@ -19,6 +19,6 @@ class UserAuth
         if(Session::has('userId')){
             return $next($request);
         }
-        return redirect('/login');
+        return abort('403');
     }
 }

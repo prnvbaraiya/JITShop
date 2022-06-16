@@ -16,12 +16,8 @@ class AlreadyLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->session()->has('loginId')){
-            return redirect('/admin/dashboard');
-        } elseif($request->session()->has('vendorId')) {
-            return redirect('/vendor/dashboard');
-        } elseif($request->session()->has('userId')) {
-            return redirect('/');
+        if($request->session()->has('loginId') || $request->session()->has('vendorId') || $request->session()->has('userId')) {
+            return abort('403');
         } else{
             return $next($request);
         }

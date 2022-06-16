@@ -20,4 +20,14 @@ class Order extends Model
         'total',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function getProduct()
+    {
+        return Product::findOrFail($this->product_id);
+    }
+
 }

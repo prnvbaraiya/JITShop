@@ -11,6 +11,7 @@ use App\Models\Product;
 use \App\Models\PaymentMethod;
 use \App\Models\Cart;
 use Illuminate\Support\Facades\DB;
+use Session;
 
 class OrderController extends Controller
 {

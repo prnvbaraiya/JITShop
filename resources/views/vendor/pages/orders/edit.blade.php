@@ -17,10 +17,23 @@
                             placeholder="Enter Brand Name" readonly="readonly">
                     </div>
                     <div class="row mt-3">
-                        <div class="col-sm-3 col-form-label">
-                            <label>Status</label>
-                        </div>
-                        <div class="col-sm-9">
+                        <label class="col-3 col-form-label">Product Name</label>
+                        <input type="text" value="{{ $order->getProduct()->name }}" name="product"
+                            class="form-control col-sm-9" placeholder="Enter Brand Name" readonly="readonly">
+                    </div>
+                    <div class="row mt-3">
+                        <label class="col-3 col-form-label">Quantity</label>
+                        <input type="text" value="{{ $order->quantity }}" name="quantity" class="form-control col-sm-9"
+                            placeholder="Enter Brand Name" readonly="readonly">
+                    </div>
+                    <div class="row mt-3">
+                        <label class="col-3 col-form-label">Price</label>
+                        <input type="text" value="{{ $order->total }}" name="total" class="form-control col-sm-9"
+                            placeholder="Enter Brand Name" readonly="readonly">
+                    </div>
+                    <div class="row mt-3">
+                        <label class="col-sm-3 col-form-label">Status</label>
+                        <div class="col-sm-9" style="margin-left: -17px;">
                             @if ($order->status != 'cancelled')
                                 <select name="status" class="form-control">
                                     @foreach (array_keys($status) as $st)

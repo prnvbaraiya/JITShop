@@ -16,7 +16,7 @@ class DiscountController extends Controller
     public function index()
     {
         $discounts = Discount::get();
-        $columns = ['id','name','Edit','Delete'];
+        $columns = ['id','name'];
         $tableName = 'discount';
         return view('admin.pages.discount.index',compact('discounts','columns','tableName'));
     }

@@ -21,6 +21,6 @@ class VendorAuth
         if(Session::has('vendorId')){
             return $next($request);
         }
-        return redirect('/');
+        return abort('403');
     }
 }

@@ -20,6 +20,6 @@
     }
     ?>
 
-    @component('vendor.components.table', ['columns' => $columns, 'contents' => $products, 'tableName' => 'product'])
+    @component('admin.components.table', ['columns' => $columns, 'contents' => $products, 'tableName' => 'product'])
     @endcomponent
 @endsection

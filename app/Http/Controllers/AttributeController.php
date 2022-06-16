@@ -15,7 +15,7 @@ class AttributeController extends Controller
     public function index()
     {
         $attributes = Attribute::get();
-        $columns = ['id','name','value','Edit','Delete'];
+        $columns = ['id','name','value'];
         $tableName = 'attribute';
         return view('admin.pages.attribute.index',compact('attributes','columns','tableName'));
     }

@@ -25,7 +25,7 @@ class ProductController extends Controller
         $discounts = Discount::get();
         $products = Product::get();
         $attributes = Attribute::get();
-        $columns = ['id', 'category_name', 'name', 'price', 'quantity', 'Edit', 'Delete'];
+        $columns = ['id', 'category_name', 'name', 'price', 'quantity'];
         return view('admin.pages.product.index', compact('categories', 'brands', 'discounts', 'attributes', 'products', 'columns'));
     }
 
@@ -37,8 +37,7 @@ class ProductController extends Controller
         $discounts = Discount::get();
         $products = Product::get();
         $attributes = Attribute::get();
-        $columns = ['id', 'category_id', 'brand_id', 'discount_id', 'name', 'details', 'attributes', 'price', 'quantity', 'Edit', 'Delete'];
-        return view('admin.pages.product.add', compact('categories', 'brands', 'discounts', 'attributes', 'products', 'columns'));
+        return view('admin.pages.product.add', compact('categories', 'brands', 'discounts', 'attributes', 'products'));
     }
 
     public function store()

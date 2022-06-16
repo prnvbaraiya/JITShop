@@ -33,8 +33,12 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (!Session::has('userId'))
-                        <li><a href="/login"><span class="glyphicon glyphicon-user"> </span> Login</a></li>
-                        <li><a href="/login"><span class="glyphicon glyphicon-list-alt"> </span> Register</a></li>
+                        <li><a href="#" onclick="openForm(event,'login')"><span class="glyphicon glyphicon-user">
+                                </span> Login</a></li>
+                        <li><a href="#" onclick="openForm(event,'register')"><span
+                                    class="glyphicon glyphicon-list-alt">
+                                </span>
+                                Register</a></li>
                     @else
                         <li class="dropdown">
                             <a href="/profile"><span class="glyphicon glyphicon-user"> </span>

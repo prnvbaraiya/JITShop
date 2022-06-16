@@ -1,71 +1,17 @@
-<div class="shop">
-	<div class="container">
-		<h1>Shop By Sellers</h1><br/>
-		<div class="row slide" align="center">
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="seller.php">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-			<div class="col-md-3 col-sm-4 col-xs-6">
-				<a href="#">
-					<div class="shop-box">
-						<img src='/storage/product/no-image.png'/><br/>
-						<label>Shop Name 1</label>
-					</div>
-				</a>
-			</div>
-		</div>
-	</div>
+<div class="category margin-top">
+    <div class="container slide">
+        <h1>Shop By Seller</h1><br />
+        <div class="row">
+            @foreach ($sellers as $seller)
+                <div class="col-md-3 col-sm-4 col-xs-6">
+                    <a href="/seller/{{ $seller->id }}">
+                        <div class="box">
+                            <img src="{{ $seller->image ?? '/storage/product/no-image.png' }}" /><br />
+                            <label>{{ $seller->name }}</label><br />
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
 </div>

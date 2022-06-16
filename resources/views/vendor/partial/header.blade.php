@@ -129,7 +129,7 @@
                         <i class="mdi mdi-settings text-primary"></i>
                         Settings
                     </a>
-                    <a class="dropdown-item" href="/admin/logout">
+                    <a class="dropdown-item" href="/vendor/logout">
                         <i class="mdi mdi-logout text-primary"></i>
                         Logout
                     </a>

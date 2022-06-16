@@ -16,7 +16,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::get();
-        $columns = ['id','name','Edit','Delete'];
+        $columns = ['id','name'];
         $tableName = 'brand';
         return view('admin.pages.brand.index',compact('brands','columns','tableName'));
     }

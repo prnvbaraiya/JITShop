@@ -59,9 +59,26 @@
                             </tr>
                         </tbody>
                     </table>
-                    <a href="/"><button type="button" class="btn btn-success btn-lg btn-block">
-                            Continue Shopping<span class="glyphicon glyphicon-chevron-right"></span>
-                        </button></a></td>
+                    <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal"
+                        data-target="#exampleModal">
+                        Confirm Order</a><span class="glyphicon glyphicon-chevron-right"></span>
+                    </button></td>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title text-center" id="exampleModalLabel">Thank You</h2>
+                </div>
+                <div class="modal-body">
+                    Your Order Soon Accepted
+                </div>
+                <div class="modal-footer">
+                    <a href="/" class="btn btn-primary">Go Shopping</a>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ use \App\Models\Address;
 use \App\Models\Order;
 use \App\Models\Product;
 use \App\Models\OrderItems;
+use \App\Models\Vendor;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -17,11 +18,15 @@ class UserController extends Controller
     public function index()
     {
         $users = User::get();
-        $columns = ['id', 'name', 'email', 'mobile', 'Edit', 'Delete'];
+        $columns = ['id', 'name', 'email', 'mobile'];
         $tableName = 'user';
         return view('admin.pages.user.index', compact('users', 'columns', 'tableName'));
     }
 
+    public function tmp()
+    {
+        return view('pages.tmp');
+    }
     public function add()
     {
         $tableName = 'user';
@@ -30,22 +35,37 @@ class UserController extends Controller
 
     public function store()
     {
-        $data = request()->validate([
-            'name' => 'required',
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'confirmed'],
-            'mobile' => ['required', 'numeric', 'digits:10'],
-        ]);
-        $hashedPassword = Hash::make(request()->password);
-        $data = array_merge(
-            $data,
-            ['password' => $hashedPassword]
-        );
-        User::create($data);
-        if (request()->session()->has('loginId')) {
-            return redirect('/admin/user')->with('message', 'added Successfully');
+        if(request('loginType')=='user'){
+            $data = request()->validate([
+                'name' => 'required',
+                'email' => ['required', 'email', 'unique:users'],
+                'password' => ['required', 'confirmed'],
+                'mobile' => ['required', 'numeric', 'digits:10'],
+            ]);
+            $hashedPassword = Hash::make(request()->password);
+            $data = array_merge(
+                $data,
+                ['password' => $hashedPassword]
+            );
+            User::create($data);
+            if (request()->session()->has('loginId')) {
+                return redirect('/admin/user')->with('message', 'added Successfully');
+            }
+            return $this->check();
+        } else {
+            $data = request()->validate([
+                'name'=>'required',
+                'email'=>'required|unique:vendor',
+                'password'=>['required']
+            ]);
+            $hashedPassword = Hash::make(request()->password);
+            $data = array_merge(
+                $data,
+                ['password'=>$hashedPassword]
+            );
+            Vendor::create($data);
+            return redirect('/vendor/');
         }
-        return $this->check();
     }
 
     public function edit(User $user)
@@ -178,10 +198,6 @@ class UserController extends Controller
     public function logout()
     {
         Session::flush();
-        // if (Session::has('userId')) {
-        //     Session::pull('userId');
-        //     Session::pull('userName');
-        // }
         return redirect('/');
     }
 }

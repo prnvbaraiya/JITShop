@@ -18,7 +18,7 @@ class PaymentMethodController extends Controller
     public function index()
     {
         $paymentMethods = PaymentMethod::get();
-        $columns = ['id', 'name', 'available', 'Edit', 'Delete'];
+        $columns = ['id', 'name', 'available'];
         $tableName = 'paymentMethod';
         return view('admin.pages.paymentMethod.index', compact('paymentMethods', 'columns', 'tableName'));
     }

@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Vendor;
+use Session;
 
 class VendorController extends Controller
 {
     public function view(){
-        return view('vendor.pages.index');
+        $vendor= Vendor::find(Session::get('vendorId'));
+        return view('vendor.pages.index',compact('vendor'));
     }
 
     public function signup(){
@@ -43,24 +45,6 @@ class VendorController extends Controller
         {
             return redirect('/vendor')->with('danger-message','email is not registered');
         }
-    }
-
-    public function store(){
-        $data = request()->validate([
-            'name'=>'required',
-            'email'=>'required|unique:vendor',
-            'password'=>['required']
-        ]);
-        $hashedPassword = Hash::make(request()->password);
-        $data = array_merge(
-            $data,
-            ['password'=>$hashedPassword]
-        );
-        Vendor::create($data);
-        $vendor = Vendor::where('email','=',$data['email'])->first();
-        request()->session()->put('vendorId',$vendor->id);
-        request()->session()->put('vendorName',$vendor->name);
-        return $this->view();
     }
 
     public function logout(){
