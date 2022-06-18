@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \App\Models\User;
-use \App\Models\Address;
-use \App\Models\Order;
-use \App\Models\Product;
-use \App\Models\OrderItems;
-use \App\Models\Vendor;
+use App\Models\User;
+use App\Models\Address;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\OrderItems;
+use App\Models\Vendor;
+use App\Models\Wishlist;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -23,10 +24,18 @@ class UserController extends Controller
         return view('admin.pages.user.index', compact('users', 'columns', 'tableName'));
     }
 
-    public function tmp()
-    {
-        return view('pages.tmp');
+    public function wishlist(Product $product){
+        $wishlist= Wishlist::where('user_id',Session::get('userId'))->where('product_id',$product->id)->first();
+        if($wishlist){
+            $wishlist->delete();
+        } else{
+            $wishlist= Wishlist::firstOrCreate([
+                'user_id'=>Session::get('userId'),
+                'product_id'=>$product->id,
+            ]);
+        }
     }
+
     public function add()
     {
         $tableName = 'user';
@@ -35,11 +44,11 @@ class UserController extends Controller
 
     public function store()
     {
-        if(request('loginType')=='user'){
+        if(request('loginType')){
             $data = request()->validate([
                 'name' => 'required',
                 'email' => ['required', 'email', 'unique:users'],
-                'password' => ['required', 'confirmed'],
+                'password' => ['required'],
                 'mobile' => ['required', 'numeric', 'digits:10'],
             ]);
             $hashedPassword = Hash::make(request()->password);
@@ -49,14 +58,17 @@ class UserController extends Controller
             );
             User::create($data);
             if (request()->session()->has('loginId')) {
-                return redirect('/admin/user')->with('message', 'added Successfully');
+                return redirect('/admin/user')
+                    ->with('alert-type','success')
+                    ->with('message', 'added Successfully');
             }
             return $this->check();
         } else {
             $data = request()->validate([
                 'name'=>'required',
-                'email'=>'required|unique:vendor',
-                'password'=>['required']
+                'email'=>'required|unique:vendor|email',
+                'mobile'=>'required|numeric|digits:10',
+                'password'=>'required'
             ]);
             $hashedPassword = Hash::make(request()->password);
             $data = array_merge(
@@ -64,7 +76,9 @@ class UserController extends Controller
                 ['password'=>$hashedPassword]
             );
             Vendor::create($data);
-            return redirect('/vendor/');
+            return redirect('/vendor/')
+                    ->with('alert-type','success')
+                    ->with('message','Added Successfully');
         }
     }
 
@@ -85,7 +99,9 @@ class UserController extends Controller
         if (Session::has('userId'))
             Session::put('userName', $data['name']);
         if (request()->session()->has('loginId')) {
-            return redirect('/admin/user')->with('message', 'Updated Successfully');
+            return redirect('/admin/user')
+                    ->with('alert-type','success')
+                    ->with('message', 'Updated Successfully');
         }
         $addresses = request('address');
         if (request('address')) {
@@ -103,7 +119,9 @@ class UserController extends Controller
                 $this->addNewAddress(0,$addresses);
             }
         }
-        return redirect('/profile');
+        return redirect('/profile')
+                ->with('alert-type','success')
+                ->with('message','Updedted Successfully');
     }
 
     public function addNewAddress($index=0,$addresses=[])
@@ -122,7 +140,9 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect('/admin/user')->with('danger-message', 'Deleted Successfully');
+        return redirect('/admin/user')
+                ->with('alert-type','error')
+                ->with('message', 'Deleted Successfully');
     }
 
     public function check()
@@ -136,7 +156,9 @@ class UserController extends Controller
             if (Hash::check($data['password'], $user['password'])) {
                 request()->session()->put('userId', $user->id);
                 request()->session()->put('userName', $user->name);
-                return redirect('/');
+                return redirect(url()->previous())
+                    ->with('alert-type','success')
+                    ->with('message','Login Successfully');
             } else {
                 return redirect('/login')
                         ->with('message', 'Password is Wrong')
@@ -198,6 +220,8 @@ class UserController extends Controller
     public function logout()
     {
         Session::flush();
-        return redirect('/');
+        return redirect('/')
+                ->with('alert-type','error')
+                ->with('message','Successfully Logout');
     }
 }

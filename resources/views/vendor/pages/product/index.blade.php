@@ -1,9 +1,6 @@
 @extends('layouts.vendor')
 
 @section('content')
-    @component('admin.components.error', [])
-    @endcomponent
-
     <div class="col-12 grid-margin">
         <div class="card">
             <div class="card-body">

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use \App\Models\Category;
 use \App\Models\Brand;
 use \App\Models\Product;
+use \App\Models\User;
 use \App\Models\Vendor;
+use Session;
 
 class HomeController extends Controller
 {
@@ -14,7 +16,8 @@ class HomeController extends Controller
     {
         $categories= Category::get();
         $sellers= Vendor::get();
-        return view('pages.index',compact('categories','sellers'));
+        $bestSProducts= Product::orderBy('sold_quantity','desc')->limit(8)->get();
+        return view('pages.index',compact('categories','sellers','bestSProducts'));
     }
     public function getBrands()
     {
@@ -38,6 +41,7 @@ class HomeController extends Controller
 
     public function product(Product $product)
     {
-        return view('pages.product',compact('product'));
+        $inWishlist= User::find(Session::get('userId'))->wishlist->contains('product_id',$product->id);
+        return view('pages.product',compact('product','inWishlist'));
     }
 }

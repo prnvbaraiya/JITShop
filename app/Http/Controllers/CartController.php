@@ -44,7 +44,7 @@ class CartController extends Controller
                 DB::rollback();
             }
         }
-        return redirect('/cart');
+        return redirect('/cart')->with('message','Item Added in Cart')->with('alert-type','success');
     }
 
     public static function getCart()
@@ -54,7 +54,7 @@ class CartController extends Controller
 
     public static function getProduct($product)
     {
-        return Product::whereIn('id',array($product))->first();
+        return Product::find($product);
     }
 
     public function destroy(Cart $cart)
@@ -72,6 +72,6 @@ class CartController extends Controller
         if(count(User::find(Session::get('userId'))->cartItems()->get())==0){
             Session::forget('cartId');
         }
-        return redirect('/cart');
+        return redirect('/cart')->with('message','Item Removed Successfully from Cart')->with('alert-type','error');
     }
 }

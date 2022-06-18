@@ -60,7 +60,7 @@ class VendorProductController extends Controller
             ['image' => $imagePath]
         );
         Product::create($data);
-        return redirect('/vendor/product')->with('message', 'added Successfully');
+        return redirect('/vendor/product')->with('alert-type','success')->with('message', 'added Successfully');
     }
 
     public function edit(Product $product)
@@ -106,7 +106,7 @@ class VendorProductController extends Controller
             );
         }
         $product->update($data);
-        return redirect('/vendor/product')->with('message', 'Updated Successfully');
+        return redirect('/vendor/product')->with('alert-type','success')->with('message', 'Updated Successfully');
     }
 
     public function destroy(Product $product)

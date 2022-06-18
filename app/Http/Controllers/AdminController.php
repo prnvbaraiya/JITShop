@@ -42,7 +42,9 @@ class AdminController extends Controller
         $admin = Admin::where('email','=',$data['email'])->first();
         request()->session()->put('loginId',$admin->id);
         request()->session()->put('adminName',$admin->name);
-        return redirect('/admin/dashboard');
+        return redirect('/admin/dashboard')
+                ->with('alert-type','success')
+                ->with('message','Admin Added Succesfully');
     }
 
     public function check()
@@ -58,22 +60,30 @@ class AdminController extends Controller
             {
                 request()->session()->put('loginId',$admin->id);
                 request()->session()->put('adminName',$admin->name);
-                return redirect('/admin/dashboard');
+                return redirect('/admin/dashboard')
+                        ->with('alert-type','success')
+                        ->with('message','Login Successfully');
             }
             else
             {
-                return redirect('/admin')->with('danger-message','Password is Wrong');
+                return redirect('/admin')
+                        ->with('alert-type','error')
+                        ->with('message','Password is Wrong');
             }
         }
         else
         {
-            return redirect('/admin')->with('danger-message','email is not registered');
+            return redirect('/admin')
+                    ->with('alert-type','error')
+                    ->with('message','E-mail is not Registered');
         }
     }
 
     public function logout()
     {
         Session::flush();
-        return redirect('/');
+        return redirect('/')
+              ->with('alert-type','error')
+              ->with('message','Logout Successfully');
     }
 }

@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('quantity');
             $table->string('image');
+            $table->integer('sold_quantity')->default(0);
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('category')->onDelete('cascade');

@@ -57,6 +57,8 @@ class OrderController extends Controller
             for($i=0;$i<count($cart);$i++){
                 $productId= $cart[$i]->product_id;
                 $pro= Product::find($cart[$i]->product_id);
+                $newSold= $pro->sold_quantity+$cart[$i]->quantity;
+                $pro->update(['sold_quantity'=>$newSold]);
                 $total = $cart[$i]->quantity * $pro->price;
                 DB::insert('insert into ordert (user_id, vendor_id, order_items_id, product_id, quantity, address, total) values (?, ?, ?, ?, ?, ?, ?)', [$data['user_id'], $pro->vendor()->first()->id, $orderItemsId, $productId, $cart[$i]->quantity,Address::find($data['address_id'])->address, $total]);
             }

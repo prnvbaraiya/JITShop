@@ -29,6 +29,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
     <!-- Fonts -->
 
@@ -76,16 +80,20 @@
                 @include('admin.partial.footer')
             </div>
         </div>
-        <script>
-            var brand = document.getElementById('brand');
-            var parts = ['orders', 'brand', 'category', 'discount', 'attributes', 'product', 'user', 'paymentMethod'];
-            for (var i = 0; i < parts.length; i++) {
-                if (window.location.href.includes(parts[i])) {
-                    var tmp = document.getElementById(parts[i]);
-                    tmp.classList.add('active');
-                }
+    </div>
+    <script>
+        var brand = document.getElementById('brand');
+        var parts = ['orders', 'brand', 'category', 'discount', 'attributes', 'product', 'user', 'paymentMethod'];
+        for (var i = 0; i < parts.length; i++) {
+            if (window.location.href.includes(parts[i])) {
+                var tmp = document.getElementById(parts[i]);
+                tmp.classList.add('active');
             }
-        </script>
+        }
+        @if (Session::has('message'))
+            toastr.{{ Session::get('alert-type', 'info') }}("{{ Session::get('message') }}");
+        @endif
+    </script>
 </body>
 
 </html>

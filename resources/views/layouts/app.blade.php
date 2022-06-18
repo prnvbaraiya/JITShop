@@ -22,7 +22,13 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <link href="{{ asset('css/bootstrap.css') }}" rel="stylesheet">
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
 
 </head>
 
@@ -34,6 +40,12 @@
         </main>
     </div>
     @include('partial.footer')
+
+    <script>
+        @if (Session::has('message'))
+            toastr.{{ Session::get('alert-type', 'error') }}("{{ Session::get('message') }}");
+        @endif
+    </script>
 </body>
 
 </html>

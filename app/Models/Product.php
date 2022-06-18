@@ -21,6 +21,7 @@ class Product extends Model
         'attributes',
         'price',
         'quantity',
+        'sold_quantity',
         'image',
     ];
 

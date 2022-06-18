@@ -33,7 +33,9 @@ class AttributeController extends Controller
             ['value'=>$value],
         );
         Attribute::create($data);
-        return redirect('/admin/attribute')->with('message','added Successfully');
+        return redirect('/admin/attribute')
+                ->with('alert-type','success')
+                ->with('message','added Successfully');
     }
     
     
@@ -66,12 +68,16 @@ class AttributeController extends Controller
         );
         $attribute->update($data);
         $attribute = Attribute::get();
-        return redirect('/admin/attribute')->with('message','Updated Successfully');
+        return redirect('/admin/attribute')
+                    ->with('alert-type','success')        
+                    ->with('message','Updated Successfully');
     }
 
     public function destroy(Attribute $attribute)
     {
         $attribute->delete();
-        return redirect('/admin/attribute')->with('danger-message','Deleted Successfully');
+        return redirect('/admin/attribute')      
+                ->with('alert-type','error')
+                ->with('danger-message','Deleted Successfully');
     }
 }

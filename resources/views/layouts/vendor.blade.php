@@ -10,6 +10,7 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+
     <!-- Scripts -->
     <script src="/admino/vendors/base/vendor.bundle.base.js"></script>
     <script src="/admino/vendors/chart.js/Chart.min.js"></script>
@@ -24,11 +25,14 @@
     <script src="/admino/js/jquery.cookie.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
+
 
 
 
@@ -46,13 +50,14 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap4.min.css">
     <link rel="shortcut icon" href="/admino/images/favicon.png" />
 
+    {{-- toastr --}}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
     <style>
         div.dataTables_wrapper div.dataTables_length select {
             width: 50px;
             display: inline-block;
         }
     </style>
-
 
 
 </head>
@@ -77,15 +82,19 @@
                 @include('admin.partial.footer')
             </div>
         </div>
-        <script>
-            var parts = ['orders', 'product'];
-            for (var i = 0; i < parts.length; i++) {
-                if (window.location.href.includes(parts[i])) {
-                    var tmp = document.getElementById(parts[i]);
-                    tmp.classList.add('active');
-                }
+    </div>
+    <script>
+        @if (Session::has('message'))
+            toastr.{{ Session::get('alert-type', 'error') }}("{{ Session::get('message') }}");
+        @endif
+        var parts = ['orders', 'product'];
+        for (var i = 0; i < parts.length; i++) {
+            if (window.location.href.includes(parts[i])) {
+                var tmp = document.getElementById(parts[i]);
+                tmp.classList.add('active');
             }
-        </script>
+        }
+    </script>
 </body>
 
 </html>

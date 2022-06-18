@@ -83,7 +83,8 @@ class DatabaseSeeder extends Seeder
         Vendor::create([
             'name' => 'prnv',
             'email' => 'baraiyaprnv@gmail.com',
-            'password' => '$2y$10$iKQR5AQWyF2AKmLgwfUS5OEpNE4CNwLJxT56I0Y5WqcKOdhE0n.Ia'
+            'password' => '$2y$10$iKQR5AQWyF2AKmLgwfUS5OEpNE4CNwLJxT56I0Y5WqcKOdhE0n.Ia',
+            'mobile'=>'0000000000'
         ]);
         Product::create([
             'category_id' => 7,

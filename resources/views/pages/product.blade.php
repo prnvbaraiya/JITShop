@@ -29,7 +29,9 @@
                     <br>
                     <div class="row">
                         <input type="submit" class="btnn" style="margin-left: 15px;" value="Add to cart">
-                        <button class="btnn">Buy Now</button>
+                        <button type="button" class="btnn">Buy Now</button>
+                        <wishlist-button product-id="{{ $product->id }}" in-wishlist="{{ $inWishlist }}">
+                        </wishlist-button>
                     </div>
                 </form>
                 <div class="row mt-3">
