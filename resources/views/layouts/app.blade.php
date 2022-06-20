@@ -29,6 +29,8 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
 </head>
 
@@ -44,6 +46,9 @@
     <script>
         @if (Session::has('message'))
             toastr.{{ Session::get('alert-type', 'error') }}("{{ Session::get('message') }}");
+        @endif
+        @if ($errors->any())
+            toastr.error('{{ $errors->first() }}');
         @endif
     </script>
 </body>

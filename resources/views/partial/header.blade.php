@@ -40,9 +40,38 @@
                                 </span>
                                 Register</a></li>
                     @else
-                        <li class="dropdown">
+                        <li>
                             <a href="/profile"><span class="glyphicon glyphicon-user"> </span>
                                 &nbsp{{ Session::get('userName') }}</a>
+                        </li>
+                        <li class="header__icon">
+                            <a href="/notification">
+                                <span class="material-icons">
+                                    <?php
+                                    $notifications = App\Models\User::find(Session::get('userId'))->unReadNotifications;
+                                    $k = 0;
+                                    foreach ($notifications as $notification) {
+                                        if (array_key_exists('date', $notification['data'])) {
+                                            if (strtotime($notification['data']['date']) > strtotime(date('Y-m-d'))) {
+                                                unset($notifications[$k]);
+                                            }
+                                        }
+                                        $k++;
+                                    }
+                                    ?>
+                                    @if ($notifications->count() > 0)
+                                        notifications_active
+                                    @else
+                                        notifications
+                                    @endif
+                                </span>
+                            </a>
+                        <li>
+                        <li class="header__icon">
+                            <a href="/cart"><span class="material-icons">
+                                    shopping_cart
+                                </span>
+                            </a>
                         </li>
                     @endif
                 </ul>

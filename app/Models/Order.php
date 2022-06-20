@@ -30,4 +30,9 @@ class Order extends Model
         return Product::findOrFail($this->product_id);
     }
 
+    public function orderId()
+    {
+        return $this->hasMany(OrderItems::class);
+    }
+
 }

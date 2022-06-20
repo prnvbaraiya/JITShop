@@ -15,10 +15,7 @@
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 text-right">
                         <p>
-                            <em>Date: {{ substr($order->time, 0, 11) }}</em>
-                        </p>
-                        <p>
-                            <em>Receipt #: {{ $orderItems->id }}</em>
+                            {{-- <em>Date: {{ substr($order->time ?? '', 0, 11) }}</em> --}}
                         </p>
                     </div>
                 </div>
@@ -54,31 +51,20 @@
                                     <h4><strong>Total: </strong></h4>
                                 </td>
                                 <td class="text-center text-danger">
-                                    <h4><strong>{{ $orderItems->total }}</strong></h4>
+                                    <h4><strong>{{ $orderTotal }}</strong></h4>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal"
-                        data-target="#exampleModal">
-                        Confirm Order</a><span class="glyphicon glyphicon-chevron-right"></span>
-                    </button></td>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title text-center" id="exampleModalLabel">Thank You</h2>
-                </div>
-                <div class="modal-body">
-                    Your Order Soon Accepted
-                </div>
-                <div class="modal-footer">
-                    <a href="/" class="btn btn-primary">Go Shopping</a>
+                    <form action="/makeOrder" method="post">
+                        @csrf
+                        <input type="hidden" name="payment" value="{{ $payment }}">
+                        <input type="hidden" name="address_id" value="{{ $addressId }}">
+                        <button type="submit" class="btn btn-success btn-lg btn-block" data-toggle="modal"
+                            data-target="#exampleModal">
+                            Confirm Order</a><span class="glyphicon glyphicon-chevron-right"></span>
+                        </button></td>
+                    </form>
                 </div>
             </div>
         </div>

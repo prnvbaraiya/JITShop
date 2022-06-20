@@ -18,6 +18,11 @@ class Wishlist extends Model
 
     public function wishlist()
     {
-        return $this->belongsTo('user');
+        return $this->belongsTo(User::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
     }
 }

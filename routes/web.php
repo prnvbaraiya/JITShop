@@ -14,8 +14,16 @@ Route::get('/contact', function () {
 Route::post('/register', 'App\Http\Controllers\UserController@store');
 // Route::get('/register', 'App\Http\Controllers\UserController@tmp');
 Route::post('/login', 'App\Http\Controllers\UserController@check')->name('login');
+Route::post('/product/rate', 'App\Http\Controllers\ProductController@rate');
+Route::post('/wishlist/{product}', 'App\Http\Controllers\UserController@wishlist');
+Route::get('/wishlist', 'App\Http\Controllers\HomeController@wishlist');
+Route::get('/wishlist/remove/{product}', 'App\Http\Controllers\UserController@removeWishlist');
+Route::post('/comment', 'App\Http\Controllers\UserController@comment');
+Route::post('/cart', 'App\Http\Controllers\CartController@store');
 
 Route::group(['middleware'=>'userAuth'],function(){
+    Route::get('/notification', 'App\Http\Controllers\UserController@notification');
+    Route::post('/vendor/rate', 'App\Http\Controllers\VendorController@rate');
     Route::get('/profile', 'App\Http\Controllers\UserController@profile');
     Route::patch('/profile/{user}', 'App\Http\Controllers\UserController@update');
     Route::post('/add/address', 'App\Http\Controllers\UserController@addNewAddress');
@@ -23,15 +31,12 @@ Route::group(['middleware'=>'userAuth'],function(){
     Route::get('/wallet', 'App\Http\Controllers\UserController@wallet');
     Route::get('/logout', 'App\Http\Controllers\UserController@logout');
     Route::get('/cart', 'App\Http\Controllers\CartController@index');
-    Route::post('/cart', 'App\Http\Controllers\CartController@store');
     Route::get('/cart/remove/{cart}', 'App\Http\Controllers\CartController@destroy');
     Route::get('/checkoutAddress', 'App\Http\Controllers\AddressController@index');
     Route::post('/paymentMethod', 'App\Http\Controllers\PaymentMethodController@show');
     Route::post('/makeOrder', 'App\Http\Controllers\OrderController@makeOrder');
-    Route::get('/order/complete/{order}', 'App\Http\Controllers\OrderController@receipt');    
+    Route::post('/complete/order', 'App\Http\Controllers\OrderController@receipt');    
     Route::get('/order/cancel/{order}', 'App\Http\Controllers\OrderController@cancelOrder');
-    Route::post('/wishlist/{product}', 'App\Http\Controllers\UserController@wishlist');
-
 });
 
 Route::get('/category/{content}', 'App\Http\Controllers\HomeController@products');

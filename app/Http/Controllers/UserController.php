@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Address;
@@ -10,6 +11,7 @@ use App\Models\Product;
 use App\Models\OrderItems;
 use App\Models\Vendor;
 use App\Models\Wishlist;
+use App\Models\ProductComment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Session;
@@ -24,16 +26,51 @@ class UserController extends Controller
         return view('admin.pages.user.index', compact('users', 'columns', 'tableName'));
     }
 
-    public function wishlist(Product $product){
-        $wishlist= Wishlist::where('user_id',Session::get('userId'))->where('product_id',$product->id)->first();
-        if($wishlist){
-            $wishlist->delete();
-        } else{
-            $wishlist= Wishlist::firstOrCreate([
-                'user_id'=>Session::get('userId'),
-                'product_id'=>$product->id,
-            ]);
+    public function notification()
+    {
+        $notifications= User::find(Session::get('userId'))->notifications;
+        for($i=0;$i<count($notifications);$i++){
+            if(array_key_exists('date',$notifications[$i]['data'])){
+                if(strtotime($notifications[$i]['data']['date'])>strtotime(date('Y-m-d'))){
+                    unset($notifications[$i]);
+                }
+            }
         }
+        return view('pages.notification',compact('notifications'));
+    }
+
+    public function wishlist(Product $product){
+        if(Session::has('userId')){
+            $wishlist= Wishlist::where('user_id',Session::get('userId'))->where('product_id',$product->id)->first();
+            if($wishlist){
+                $wishlist->delete();
+                return redirect()->back()
+                        ->with('message','removed from wishlist')
+                        ->with('alert-type','success');
+            } else{
+                $wishlist= Wishlist::firstOrCreate([
+                    'user_id'=>Session::get('userId'),
+                    'product_id'=>$product->id,
+                ],['time'=>request('date')]);
+                $notification=['title'=>'Wishlist Item','message'=>'Your Wishlist Item '.$product->name .' is passed your Buying Date','date'=>request('date')];
+                User::find(Session::get('userId'))->notify(new UserNotification($notification));
+                return redirect()->back()
+                        ->with('message','added to wishlist')
+                        ->with('alert-type','success');
+            }
+        }
+        return redirect()->back()
+                        ->with('message','login first')
+                        ->with('alert-type','error');
+    }
+
+    public function removeWishlist(Product $product)
+    {
+        $wishlist= Wishlist::where('user_id',Session::get('userId'))->where('product_id',$product->id)->first();
+        $wishlist->delete();
+        return redirect()->back()
+                        ->with('message','removed from wishlist')
+                        ->with('alert-type','success');
     }
 
     public function add()
@@ -56,12 +93,13 @@ class UserController extends Controller
                 $data,
                 ['password' => $hashedPassword]
             );
-            User::create($data);
+            $user=User::create($data);
             if (request()->session()->has('loginId')) {
                 return redirect('/admin/user')
                     ->with('alert-type','success')
                     ->with('message', 'added Successfully');
             }
+            // $user->notify(new UserNotification);
             return $this->check();
         } else {
             $data = request()->validate([
@@ -217,6 +255,19 @@ class UserController extends Controller
         return User::findOrFail($id);
     }
 
+    public function comment()
+    {
+        $data=request()->validate([
+            'comment'=>'required',
+        ]);
+        $user= User::find(Session::get('userId'));
+        ProductComment::firstOrCreate([
+            'product_id'=>request('product_id'),
+            'user_id'=>$user->id,
+        ],['comment'=>request('comment')]);
+        return redirect()->back()->with('alert-type','success')->with('message','Comment Added');
+    }
+
     public function logout()
     {
         Session::flush();
@@ -224,4 +275,5 @@ class UserController extends Controller
                 ->with('alert-type','error')
                 ->with('message','Successfully Logout');
     }
+    
 }

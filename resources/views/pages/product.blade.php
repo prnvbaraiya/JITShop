@@ -1,58 +1,178 @@
 @extends('layouts.app')
 @section('content')
-    <div class="product__container">
-        <div class="product__image">
-            <img src="{{ $product->image }}" alt="Product Image">
-        </div>
-        <div class="product__details">
-            <label class="product__name">{{ $product->name }}</label>
-            <label class="product__quantity">
-                @if ($product->quantity == 0)
-                    Currently Unavailable
-                @elseif($product->quantity < 3)
-                    Only {{ $product->quantity }} left
-                @endif
-            </label>
-            <label>{{ $product->details }}</label>
-            <label>Rs.{{ $product->price }}</label>
-            <br>
-            @if ($product->quantity > 0)
-                <form action="/cart" method="post">
-                    @csrf
-                    <div class="row">
-                        <button class="btn" style="margin-left: 15px;" onClick="addItems(event,'add')">+</button>
-                        <input type="number" id="items" name="quantity" value="1" style="width: 30px;"
-                            readonly="readonly">
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <button class="btn" onClick="addItems(event,'sub')">-</button>
+    {{-- https://bootsnipp.com/snippets/56bAW
+        https://bootsnipp.com/snippets/KB03 --}}
+    <div class="container">
+        <div class="card">
+            <div class="container-fliud">
+                <div class="wrapper row">
+                    <div class="preview col-md-6">
+                        <div class="preview-pic tab-content">
+                            <div class="tab-pane active" id="pic-1"><img src="{{ $product->image }}" />
+                                <x-wishlistBtn :product="$product" :inWishlist="$inWishlist"></x-wishlistBtn>
+                            </div>
+                        </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <input type="submit" class="btnn" style="margin-left: 15px;" value="Add to cart">
-                        <button type="button" class="btnn">Buy Now</button>
-                        <wishlist-button product-id="{{ $product->id }}" in-wishlist="{{ $inWishlist }}">
-                        </wishlist-button>
+                    <div class="details col-md-6" style="margin-left: 15px;">
+                        <h3 class="product-title">{{ $product->name }}</h3>
+                        <div class="rating">
+                            <div class="stars">
+                                @for ($i = 1; $i < $productRate['productRateAvg']; $i++)
+                                    <span class="material-icons">star</span>
+                                @endfor
+                                @for ($i = $productRate['productRateAvg']; $i < 5; $i++)
+                                    <span class="material-icons">star_border</span>
+                                @endfor
+                            </div>
+                            @if ($productRate['productRateCount'] > 0)
+                                <span class="review-no">{{ $productRate['productRateCount'] }} reviews</span>
+                            @else
+                                <span class="review-no">No reviews</span>
+                            @endif
+                        </div>
+                        <p class="product-description">{{ $product->details }}</p>
+                        <h4 class="price">
+                            <span>₹{{ $product->price }}</span>
+                        </h4>
+                        <form action="/cart" method="post">
+                            @csrf
+                            <input type="hidden" id="quantity" name="quantity" value="1">
+                            <div class="btn-group mb-3">
+                                <button type="button" class="btn btn-default border-none" onClick="addItems(event,'add')">
+                                    <span class="material-icons">
+                                        add_circle
+                                    </span>
+                                </button>
+
+                                <button type="button" class="btn btn-default border-none" id="quantityBtn"
+                                    disabled>1</button>
+                                <button type="button" class="btn btn-default border-none" onClick="addItems(event,'sub')">
+                                    <span class="material-icons">
+                                        remove_circle
+                                    </span>
+                                </button>
+                            </div><br />
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <div class="action">
+                                <button type="button" class="add-to-cart btn btn-default" type="button">add to
+                                    cart</button>
+                                <button type="submit" class="add-to-cart btn btn-default" type="button">buy now</button>
+                            </div>
+                        </form>
+                        <br />
+                        <h4>Seller: <b>{{ $product->vendor->name }} </b><button class="badge badge-primary"
+                                data-toggle="modal" data-target="#sellerRate"
+                                style="outline: none;border:none;">{{ $vendorRate['vendorRateAvg'] }}
+                                <img src="/image/star.svg">
+                            </button>
+                        </h4>
+
+                        <div class="modal fade" id="sellerRate" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <form action="/vendor/rate" method="post">
+                                    @csrf
+                                    <input type="hidden" name="vendor_id" value="{{ $product->vendor->id }}">
+                                    <input type="hidden" name="user_id" value="{{ Session::get('userId') }}">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title" id="modalLabel">Rate Seller</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ $product->vendor->name }}<br /><br />
+                                            <x-rate :rate="$vendorRate['userVendorRate']" ratingFor="vendor__rating"></x-rate>
+
+                                            <script type="application/javascript">
+                                                function addItems(event, operation) {
+                                                    event.preventDefault();
+                                                    var count = document.querySelector('#quantityBtn').innerHTML;
+                                                    console.log(operation);
+                                                    if (operation == "add") {
+                                                        if (count < {{ $product->quantity }})
+                                                            count++;
+                                                    } else {
+                                                        console.log('yes');
+                                                        if (count > 1)
+                                                            count--;
+                                                    }
+                                                    document.querySelector('#quantityBtn').innerHTML = count;
+                                                    document.querySelector('#quantity').value = count;
+                                                }
+
+                                                function star(num, classN) {
+                                                    var data = document.querySelector('.' + classN);
+                                                    var d = (num - 1) * 4 + 2;
+                                                    for (var i = 2; i <= d; i += 4) {
+                                                        data.childNodes[i].lastChild.innerHTML = 'star';
+                                                    }
+                                                    for (var i = d + 4; i <= 18; i += 4) {
+                                                        data.childNodes[i].lastChild.innerHTML = 'star_border';
+                                                    }
+                                                }
+                                            </script>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-warning">Rate</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
                     </div>
-                </form>
-                <div class="row mt-3">
-                    Seller : <label class="text-capitalize"> {{ $product->vendor->name }}</label>
                 </div>
-                <script>
-                    function addItems(event, operation) {
-                        event.preventDefault();
-                        var count = document.getElementById('items').value;
-                        if (operation == "add") {
-                            if (count < {{ $product->quantity }})
-                                count++;
-                        } else {
-                            if (count > 1)
-                                count--;
-                        }
-                        document.getElementById('items').value = count;
-                    }
-                </script>
-                <br>
-            @endif
+            </div>
         </div>
     </div>
+    <hr>
+    <div class="container">
+        <div class="card">
+            <div class="container-fliud">
+                <div class="wrapper row">
+                    <div class="preview col-md-6">
+                        <div class="row">
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                data-target="#flipFlop">Rate Product</button>
+                        </div>
+
+                        {{-- Modal --}}
+                        <div class="modal fade" id="flipFlop" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <form action="/product/rate" method="post">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="user_id" value="{{ Session::get('userId') }}">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <h4 class="modal-title" id="modalLabel">Rate Product</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ $product->name }}<br /><br />
+                                            <x-rate :rate="$productRate['userProductRate']" ratingFor="product__rating"></x-rate>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-warning">Rate</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <x-commentSection :product="$product"></x-commentSection>
 @endsection

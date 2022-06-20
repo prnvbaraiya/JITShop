@@ -3,14 +3,6 @@
     <?php
     $items = App\Http\Controllers\CartController::getCart();
     ?>
-    <div class="profile_container">
-        <div class="tab">
-            <a href="/profile"><button class="tablinks">Profile</button></a>
-            <a href="/wallet"><button class="tablinks">Wallet</button></a>
-            <a href="/orderHistory"><button class="tablinks">Order History</button></a>
-            <a href="/cart"><button class="tablinks active">Cart</button></a>
-        </div>
-    </div>
     <br><br><br>
     @if (count($items) == 0)
         <h2 style="text-align: center;">Your Cart is Empty <a href="/">Let's start Shopping</a>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications\UserNotification;
+
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItems;
@@ -55,20 +57,26 @@ class OrderController extends Controller
             $orderItemsId = OrderItems::whereIn('user_id', [Session::get('userId')])->get();
             $orderItemsId = $orderItemsId[count($orderItemsId) - 1]->id;
             for($i=0;$i<count($cart);$i++){
-                $productId= $cart[$i]->product_id;
-                $pro= Product::find($cart[$i]->product_id);
-                $newSold= $pro->sold_quantity+$cart[$i]->quantity;
-                $pro->update(['sold_quantity'=>$newSold]);
-                $total = $cart[$i]->quantity * $pro->price;
-                DB::insert('insert into ordert (user_id, vendor_id, order_items_id, product_id, quantity, address, total) values (?, ?, ?, ?, ?, ?, ?)', [$data['user_id'], $pro->vendor()->first()->id, $orderItemsId, $productId, $cart[$i]->quantity,Address::find($data['address_id'])->address, $total]);
+                $product= Product::find($cart[$i]->product_id);
+                $newSold= $product->sold_quantity+$cart[$i]->quantity;
+                $product->update(['sold_quantity'=>$newSold]);
+                $total = $cart[$i]->quantity * $product->price;
+                DB::insert('insert into ordert (user_id, vendor_id, order_items_id, product_id, quantity, address, total) values (?, ?, ?, ?, ?, ?, ?)', [$data['user_id'], $product->vendor()->first()->id, $orderItemsId, $product->id, $cart[$i]->quantity,Address::find($data['address_id'])->address, $total]);
+                $notification=['title'=>'Order '.$orderItemsId,'message'=>'Your Item '.$product->name .' will be soon dispached'];
+                User::find(Session::get('userId'))->notify(new UserNotification($notification));
             }
             DB::delete('delete from cart where user_id = ?', [Session::get('userId')]);
             DB::commit();
+            Session::forget('cartId');
+            return redirect('/')
+                    ->with('alert-type','success')
+                    ->with('message','Order Placed Successfully');
         } catch (Exception $e) {
             DB::rollback();
         }
-        Session::forget('cartId');
-        return redirect('/order/complete/'.$orderItemsId);
+        return redirect()->back()
+                ->with('alert-type','error')
+                ->with('message','Please Try Again After Some Time');
     }
 
     public function edit(Order $order)
@@ -91,26 +99,26 @@ class OrderController extends Controller
         return redirect('/admin/orders');
     }
 
-    public function receipt($orderItems)
+    public function receipt()
     {
-        $orderItems= OrderItems::find($orderItems);
-        $user= User::find($orderItems->user_id);
-        $order= Order::whereIn('order_items_id',$orderItems)->first();
-        $address= $order->address;
-        $produtsIds= json_decode($orderItems->product_ids);
-        $quantities= json_decode($orderItems->quantity);
-        $orderTotal= 0;
-        for($i=0;$i<count($produtsIds);$i++)
-        {
-            $product= Product::find($produtsIds[$i]);
+        $user= User::find(Session::get('userId'));
+        $cart= $user->cartItems;
+        $orderTotal=0;
+        for($i=0;$i<$cart->count();$i++){
+            $product= Product::find($cart[$i]['product_id']);
+            $total=$product->price*$cart[$i]->quantity;
             $data[$i]=[
-                'name'=> $product->name,
-                'quantity'=> $quantities[$i],
-                'price'=> $product->price,
-                'total'=> $product->price*$quantities[$i]
+                'name'=>$product->name,
+                'quantity'=>$cart[$i]->quantity,
+                'price'=>$product->price,
+                'total'=>$total,
             ];
+            $orderTotal+= $total;
         }
-        return view('pages.receipt',compact('user','address','orderItems','order','data'));
+        $addressId= request('address_id');
+        $address=Address::find($addressId)->address;
+        $payment= request('payment');
+        return view('pages.receipt',compact('user','addressId','address','orderTotal','data','payment'));
     }
     
     public function thankYou()

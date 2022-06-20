@@ -7,8 +7,12 @@ use \App\Models\Category;
 use \App\Models\Brand;
 use \App\Models\Product;
 use \App\Models\User;
+use \App\Models\ProductRate;
+use \App\Models\VendorRate;
+use \App\Models\Wishlist;
 use \App\Models\Vendor;
 use Session;
+use Illuminate\Support\Arr;
 
 class HomeController extends Controller
 {
@@ -34,6 +38,7 @@ class HomeController extends Controller
         return view('pages.products',compact('content'));
     }
 
+
     public function seller(Vendor $content)
     {
         return view('pages.products',compact('content'));
@@ -41,7 +46,31 @@ class HomeController extends Controller
 
     public function product(Product $product)
     {
-        $inWishlist= User::find(Session::get('userId'))->wishlist->contains('product_id',$product->id);
-        return view('pages.product',compact('product','inWishlist'));
+        $productRate= ProductRate::where('user_id',Session::get('userId'))
+                        ->where('product_id',$product->id)
+                        ->first();
+        $userProductRate= $productRate!=null ? $productRate->rate : 0;
+        $vendorRate= VendorRate::where('user_id',Session::get('userId'))
+                        ->where('vendor_id',$product->vendor->id)
+                        ->first();
+        $userVendorRate= $vendorRate!=null ? $vendorRate->rate : 0;
+        $vendorR= VendorRate::where('vendor_id',$product->vendor->id)->get();
+        $productR= ProductRate::where('product_id',$product->id)->get();
+        $productRAvg= $productR->count()!=0 ? array_sum(Arr::pluck($productR,'rate'))/$productR->count() : 0;
+        $vendorRAvg= $vendorR->count()!=0 ? array_sum(Arr::pluck($vendorR,'rate'))/$vendorR->count() : 0;
+
+        $vendorRate= ['vendorRateAvg' => $vendorRAvg,
+                    'vendorRateCount'=>$vendorR->count(),
+                    'userVendorRate'=>$userVendorRate];
+        $productRate= ['productRateAvg'=>$productRAvg,
+                    'productRateCount'=>$productR->count(),
+                    'userProductRate'=>$userProductRate];
+        $inWishlist= User::find(Session::get('userId'))!=null ? User::find(Session::get('userId'))->wishlist->contains('product_id',$product->id) : false;
+        return view('pages.product',compact('product','inWishlist','productRate','vendorRate'));
+    }
+
+    public function wishlist(){
+        $wishlists= Wishlist::where('user_id',Session::get('userId'))->orderBy('time')->get();
+        return view('pages.wishlist',compact('wishlists'));
     }
 }

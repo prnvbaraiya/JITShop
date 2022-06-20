@@ -17,4 +17,14 @@ class OrderItems extends Model
         'quantity',
         'total'
     ];
+
+    public function order()
+    {
+        return $this->belongsto(Order::class);
+    }
+    
+    public function user()
+    {
+        return $this->belongsto(User::class);
+    }
 }

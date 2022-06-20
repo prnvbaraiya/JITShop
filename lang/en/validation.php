@@ -151,6 +151,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'comment' => [
+            'required' => 'please write comment is first',
+        ],
     ],
 
     /*

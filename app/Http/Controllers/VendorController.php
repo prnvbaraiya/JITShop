@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Vendor;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\VendorRate;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
 use Session;
@@ -17,6 +18,14 @@ class VendorController extends Controller
     {
         $vendor= Vendor::find(Session::get('vendorId'));
         return view('vendor.pages.dashboard.edit',compact('vendor'));
+    }
+
+    public function rate()
+    {
+        VendorRate::updateOrCreate(['user_id'=>request('user_id'),'vendor_id'=>request('vendor_id')],['rate'=>request('rate')]);
+        return redirect()->back()
+                ->with('alert-type','success')
+                ->with('message','Seller Rated Successfully');
     }
 
     public function update()

@@ -108,7 +108,14 @@
                                 Rating
                             </div>
                             <div class="col-md-6">
-                                4.8 out of 5 (543 ratings)
+                                {{ $vendor->ratingAvg() }} out of 5
+                                (
+                                @if ($vendor->rate->count() > 0)
+                                    {{ $vendor->rate->count() }}
+                                @else
+                                    No
+                                @endif
+                                ratings)
                             </div>
                         </div>
                     </div>

@@ -7,16 +7,15 @@ use \App\Models\Category;
 use \App\Models\Brand;
 use \App\Models\Discount;
 use \App\Models\Product;
+use \App\Models\User;
 use \App\Models\Attribute;
+use \App\Models\ProductRate;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
+use Session;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('adminAuth');
-    }
 
     public function index()
     {
@@ -27,6 +26,27 @@ class ProductController extends Controller
         $attributes = Attribute::get();
         $columns = ['id', 'category_name', 'name', 'price', 'quantity'];
         return view('admin.pages.product.index', compact('categories', 'brands', 'discounts', 'attributes', 'products', 'columns'));
+    }
+
+    public function rate()
+    {
+        if(request('user_id')==null){
+            return redirect()
+                    ->back()
+                    ->with('alert-type','error')
+                    ->with('message','Login First');
+        } else{
+            if(User::find(Session::get('userId'))->orders->contains('product_id',request('product_id'))){
+                ProductRate::updateOrCreate(['user_id'=>request('user_id'),'product_id'=>request('product_id')],['rate'=>request('rate')]);
+                return redirect()->back()
+                        ->with('alert-type','success')
+                        ->with('message','Product Rated Successfully');
+            } else{
+                return redirect()->back()
+                        ->with('alert-type','error')
+                        ->with('message','Buy Product First');
+            }
+        }
     }
 
 

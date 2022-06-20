@@ -24,7 +24,7 @@
                 <input type="password" name="password" class="input" placeholder="a">
                 <label for="password" class="label">Password</label>
             </div>
-            <input type="submit" class="submit__button" value="Login">
+            <input type="submit" class="submit__button" value="Register">
     </form>
 </div>
 

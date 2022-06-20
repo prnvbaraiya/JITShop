@@ -5377,6 +5377,57 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ["productId", "inWishlist"],
   mounted: function mounted() {
@@ -5388,22 +5439,31 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    openModel: function openModel() {
+      this.status == false ? $("#wishlistDate").modal("show") : this.wishlistAdd();
+    },
     wishlistAdd: function wishlistAdd() {
       var _this = this;
 
-      axios.post("/wishlist/" + this.productId).then(function (response) {
-        console.log(_this.status);
-        _this.status = !_this.status;
-      })["catch"](function (error) {
-        if (errors.response.status == 401) {
-          window.location = '/';
+      axios.post("/wishlist/" + this.productId, {
+        _method: "patch",
+        _token: "{{ csrf_token() }}",
+        additionals_features: "2020-05-21"
+      }).then(function (response) {
+        if (response.data.status == "ok") {
+          _this.status = !_this.status;
+          toastr.success(response.data.message);
+        } else {
+          toastr.error(response.data.message);
         }
+      })["catch"](function (error) {
+        console.log(error.data);
       });
     }
   },
   computed: {
     buttonText: function buttonText() {
-      return this.status ? "Remove From Wishlist" : "Add To Wishlist";
+      return this.status ? "favorite" : "favorite_border";
     }
   }
 });
@@ -28017,14 +28077,114 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("button", {
-    staticClass: "btnn",
-    attrs: { type: "button" },
-    domProps: { textContent: _vm._s(_vm.buttonText) },
-    on: { click: _vm.wishlistAdd },
-  })
+  return _c("div", [
+    _c("div", { staticClass: "wishlist__icon" }, [
+      _c("span", {
+        staticClass: "wishlist material-icons",
+        attrs: { id: "myInput" },
+        domProps: { textContent: _vm._s(_vm.buttonText) },
+        on: { click: _vm.openModel },
+      }),
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { tabindex: "-1", role: "dialog", id: "wishlistDate" },
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "submit", "data-dismiss": "modal" },
+                    on: { click: _vm.wishlistAdd },
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Add to Wishlist\n                    "
+                    ),
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { type: "button", "data-dismiss": "modal" },
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Close\n                    "
+                    ),
+                  ]
+                ),
+              ]),
+            ]),
+          ]
+        ),
+      ]
+    ),
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c("h5", { staticClass: "modal-title" }, [
+        _vm._v("Future Purchase Date"),
+      ]),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close",
+          },
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+    ])
+  },
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-body" }, [
+      _c("p", [
+        _vm._v(
+          "\n                        Select Future Purchase Date :\n                        "
+        ),
+        _c("input", {
+          attrs: {
+            type: "date",
+            name: "date",
+            min: "2022-06-20",
+            value: "2022-06-21",
+            id: "date",
+            required: "",
+          },
+        }),
+      ]),
+    ])
+  },
+]
 render._withStripped = true
 
 

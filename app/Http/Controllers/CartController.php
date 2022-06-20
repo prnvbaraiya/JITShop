@@ -17,6 +17,7 @@ class CartController extends Controller
     }
     public function store()
     {
+        dd(Session::get('buttonText'));
         if(!Session::has('cartId')){
             Session::put('cartId',1);
         }
@@ -40,11 +41,14 @@ class CartController extends Controller
                     DB::insert('insert into cart (user_id, product_id, quantity)values (?, ?, ?)', [$data['user_id'],$data['product_id'],$data['quantity']]);
                 }
                 DB::commit();
+                return redirect('/cart')->with('message','Item Added in Cart')->with('alert-type','success');
             } catch(Exception $e){
                 DB::rollback();
             }
         }
-        return redirect('/cart')->with('message','Item Added in Cart')->with('alert-type','success');
+        return redirect()->back()
+                ->with('alert-type','error')
+                ->with('message','Thier is Some Error!!');
     }
 
     public static function getCart()
