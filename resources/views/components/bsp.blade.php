@@ -6,7 +6,8 @@
                 <div class="col-md-3">
                     <a href="/product/{{ $product->id }}">
                         <div class="box">
-                            <img src="{{ $product->image ?? '/storage/product/no-image.png' }}" /><br />
+                            <img src="{{ $product->image ?? '/storage/product/no-image.png' }}" width="800"
+                                height="400" loading="lazy" /><br />
                             <label>{{ $product->name }}</label><br />
                         </div>
                     </a>

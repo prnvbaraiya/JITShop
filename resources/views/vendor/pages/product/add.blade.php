@@ -53,43 +53,6 @@
 
                     <div class="row mt-4 main">
                         <div class="col-sm-9">
-                            <script>
-                                globalThis.available = [];
-
-                                function remove() {
-                                    var content = '<div class="row mt-4"><label class="ms-2 col-sm-3 col-form-label text-capitalize">';
-                                    var value = document.getElementById('attribute_id').value;
-                                    available.push(value);
-                                    @for ($i = 0; $i < count($attributes); $i++)
-                                        {
-
-                                            if ({{ $attributes[$i]->id }} === parseInt(value)) {
-                                                content +=
-                                                    '{{ $attributes[$i]->name }}</label><div class="m-2 align-items-center col-sm-7 d-flex flex-wrap">';
-                                                <?php $j = 0; ?>
-                                                @foreach (explode(',', $attributes[$i]->value) as $value)
-                                                    content +=
-                                                        '<input type="checkbox" class="me-1" name="attributeArr[{{ $attributes[$i]->id }}][]" value="{{ $j++ }}"><label class="me-3" for="{{ $value }}">{{ $value }}</label>';
-                                                @endforeach
-                                                content += '</div></div>';
-                                                $(".main").append(content);
-                                                content = '';
-                                            }
-                                        }
-                                    @endfor
-
-                                    $(".removeAttributes").remove();
-                                    var data =
-                                        '<div class="col-sm-6 d-flex removeAttributes"><select id="attribute_id" name="attribute_id" class="form-control">';
-                                    @foreach ($attributes as $attribute)
-                                        if (available.indexOf('{{ $attribute->id }}') == -1)
-                                            data += '<option value="{{ $attribute->id }}">{{ $attribute->name }}</option>';
-                                    @endforeach
-                                    data += '</select><button onclick="remove()" class="col-sm-4 ms-3 lol btn btn-primary">Get Attributes</button>';
-                                    data += '</div>';
-                                    $(".addAttributes").append(data);
-                                }
-                            </script>
                         </div>
                     </div>
                     <div class="row">
@@ -148,7 +111,9 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Upload Image</label>
                                 <div class="col-sm-8 ml-3">
-                                    <input type="file" class="custom-file-input" id="customFile" name="image">
+                                    <input type="file" type="file"
+                                        onchange="document.getElementById('blah').src = window.URL.createObjectURL(this.files[0])"
+                                        class="custom-file-input" id="customFile" name="image">
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
                             </div>
@@ -157,12 +122,16 @@
                             @enderror
                         </div>
                     </div>
-                    <script>
-                        $(".custom-file-input").on("change", function() {
-                            var fileName = $(this).val().split("\\").pop();
-                            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-                        });
-                    </script>
+                    <div class="row form-group">
+                        <div class="col-md-12 mt-4">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Preview Image</label>
+                                <div class="col-sm-8 ml-3">
+                                    <img id="blah" alt="your image" width="500" height="500" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12 mt-4">
                             <div class="form-group row">
@@ -174,4 +143,47 @@
             </div>
         </div>
     </div>
+
+    <script>
+        globalThis.available = [];
+
+        $(".custom-file-input").on("change", function() {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+
+        function remove() {
+            var content = '<div class="row mt-4"><label class="ms-2 col-sm-3 col-form-label text-capitalize">';
+            var value = document.getElementById('attribute_id').value;
+            available.push(value);
+            @for ($i = 0; $i < count($attributes); $i++)
+                {
+                    if ({{ $attributes[$i]->id }} === parseInt(value)) {
+                        content +=
+                            '{{ $attributes[$i]->name }}</label><div class="m-2 align-items-center col-sm-7 d-flex flex-wrap">';
+                        <?php $j = 0; ?>
+                        @foreach (explode(',', $attributes[$i]->value) as $value)
+                            content +=
+                                '<input type="checkbox" class="me-1" name="attributeArr[{{ $attributes[$i]->id }}][]" value="{{ $j++ }}"><label class="me-3" for="{{ $value }}">{{ $value }}</label>';
+                        @endforeach
+                        content += '</div></div>';
+                        $(".main").append(content);
+                        content = '';
+                    }
+                }
+            @endfor
+
+            $(".removeAttributes").remove();
+            var data =
+                '<div class="col-sm-6 d-flex removeAttributes"><select id="attribute_id" name="attribute_id" class="form-control">';
+            @foreach ($attributes as $attribute)
+                if (available.indexOf('{{ $attribute->id }}') == -1)
+                    data += '<option value="{{ $attribute->id }}">{{ $attribute->name }}</option>';
+            @endforeach
+            data += '</select><button onclick="remove()" class="col-sm-4 ms-3 lol btn btn-primary">Get Attributes</button>';
+            data += '</div>';
+            $(".addAttributes").append(data);
+        }
+    </script>
 @endsection

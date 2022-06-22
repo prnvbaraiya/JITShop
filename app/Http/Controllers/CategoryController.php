@@ -35,7 +35,10 @@ class CategoryController extends Controller
             'image'=>'required',
         ]);
         $imagePath = request('image')->store('category','public');
-        $image = Image::make(public_path("storage/{$imagePath}"))->fit(500,500);
+        $image = Image::make(public_path("storage/{$imagePath}"))->resize(500, 500, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
         $image->save();
         $imagePath = "/storage/".$imagePath;
         $data = array_merge(
@@ -62,7 +65,10 @@ class CategoryController extends Controller
             $filePath = public_path().$category->image;
             File::delete($filePath);
             $imagePath = request('image')->store('category','public');
-            $image = Image::make(public_path("storage/{$imagePath}"))->fit(500,500);
+            $image = Image::make(public_path("storage/{$imagePath}"))->resize(500, 500, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
             $image->save();
             $imagePath = "/storage/".$imagePath;
             $data = array_merge(

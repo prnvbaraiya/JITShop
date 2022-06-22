@@ -29,12 +29,12 @@
                                         </td>
                                     @endfor
                                     <td class="th-sm"><a
-                                            href="/vendor/{{ $tableName }}/{{ $content['id'] }}"><button
+                                            href="/{{ $loginType ?? 'admin' }}/{{ $tableName }}/{{ $content['id'] }}"><button
                                                 class="btn btn-primary">Edit</button></a>
                                     </td>
                                     @if ($tableName != 'orders')
                                         <td class="th-sm"><a
-                                                href="/vendor/{{ $tableName }}/delete/{{ $content['id'] }}"><button
+                                                href="/{{ $loginType ?? 'admin' }}/{{ $tableName }}/delete/{{ $content['id'] }}"><button
                                                     class="btn btn-danger">Delete</button></a>
                                         </td>
                                     @endif

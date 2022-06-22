@@ -54,9 +54,9 @@
                             </div><br />
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <div class="action">
-                                <button type="button" class="add-to-cart btn btn-default" type="button">add to
-                                    cart</button>
-                                <button type="submit" class="add-to-cart btn btn-default" type="button">buy now</button>
+                                <input type="submit" class="add-to-cart btn btn-default" name="buttonText"
+                                    value="add to cart">
+                                <input type="submit" class="add-to-cart btn btn-default" name="buttonText" value="buy now">
                             </div>
                         </form>
                         <br />
@@ -174,5 +174,5 @@
             </div>
         </div>
     </div>
-    <x-commentSection :product="$product"></x-commentSection>
+    <x-commentSection :product="$product" :userComment="$userComment"></x-commentSection>
 @endsection

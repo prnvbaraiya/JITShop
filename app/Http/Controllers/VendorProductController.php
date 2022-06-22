@@ -51,7 +51,10 @@ class VendorProductController extends Controller
             'image' => ['required', 'image'],
         ]);
         $imagePath = request('image')->store('product', 'public');
-        $image = Image::make(public_path("storage/{$imagePath}"))->fit(500, 500);
+        $image = Image::make(public_path("storage/{$imagePath}"))->resize(500, 500, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
         $image->save();
         $imagePath = "/storage/" . $imagePath;
         $data = array_merge(
@@ -97,7 +100,7 @@ class VendorProductController extends Controller
             $filePath = public_path() . $product->image;
             File::delete($filePath);
             $imagePath = request('image')->store('product', 'public');
-            $image = Image::make(public_path("storage/{$imagePath}"))->fit(500, 500);
+            $image = Image::make(public_path("storage/{$imagePath}"))->resizeCanvas(500, 500, 'center', false,'#ffffff');
             $image->save();
             $imagePath = "/storage/" . $imagePath;
             $data = array_merge(

@@ -4,469 +4,79 @@
             <div class="wrapper row">
                 <div class="preview col-md-12">
                     <div class="post-comments">
-                        <form action="/comment" method="post">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <div class="form-group">
-                                <label for="comment">Your Comment</label>
-                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                        @if (Session::has('userId'))
+                            <form action="/comment" method="post">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <div class="form-group">
+                                    <label for="comment">Your Comment</label>
+                                    <textarea name="comment" id="comment" class="form-control" rows="3"></textarea>
+                                </div>
+                                <input type="submit" id="commentSubmit" name="submitType" class="btn btn-default"
+                                    value="Send">
+                            </form>
+                        @endif
+                        @if ($userComment != null)
+                            <div class="row" style="margin: 1em 0 0 0;">
+                                <div class="media">
+                                    <div class="media-heading">
+                                        <span style="font-size: 20px;font-weight: bold;max-width: 60vw;">You</span>
+                                        {{ $userComment->updated_at }}
+                                        <div class="panel-collapse collapse in" id="collapseOne">
+                                            <div class="media-left" style="width: 17vw;"></div>
+                                            <div class=""
+                                                style=" width: 100%;background: rgba(128, 128, 128,0.2);border-radius:10px;padding:10px;">
+                                                <div class="content" style="word-wrap: break-word;">
+                                                    {{ $userComment->comment }}
+                                                </div>
+                                                <br>
+                                                <p><a onclick="commentUpdate()"
+                                                        style="color: blue;cursor: pointer;">Edit</a> |
+                                                    <a href="/comment/remove/{{ $product->id }}"
+                                                        style="color: blue;">Delete</a>
+                                                </p>
+                                                <script>
+                                                    function commentUpdate() {
+                                                        var comment = '{{ $userComment->comment }}';
+                                                        document.querySelector('#comment').value = comment;
+                                                        document.querySelector('#commentSubmit').value = "Update";
+                                                    }
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-default">Send</button>
-                        </form>
+                        @endif
 
-                        {{-- <div class="comments-nav">
-                            <ul class="nav nav-pills">
-                                <li role="presentation" class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        there are 2593 comments <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#">Best</a></li>
-                                        <li><a href="#">Hot</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div> --}}
+                        @foreach ($product->comment as $comment)
+                            @if (!($comment->user->id == Session::get('userId')))
+                                <div class="row" style="margin: 1em 0 0 0;">
 
-                        <div class="row">
+                                    <div class="media">
+                                        <!-- first comment -->
 
-                            <div class="media">
-                                <!-- first comment -->
+                                        <div class="media-heading">
+                                            <span
+                                                style="font-size: 20px;font-weight: bold;max-width:  60vw;">{{ $comment->user->name }}</span>
+                                            {{ $comment->updated_at }}
+                                        </div>
 
-                                <div class="media-heading">
-                                    <button class="btn btn-default btn-xs" type="button" data-toggle="collapse"
-                                        data-target="#collapseOne" aria-expanded="false"
-                                        aria-controls="collapseExample"><span class="glyphicon glyphicon-minus"
-                                            aria-hidden="true"></span></button> <span class="label label-info"></span>
-                                    terminator 12 hours ago
-                                </div>
-
-                                <div class="panel-collapse collapse in" id="collapseOne">
-
-                                    <div class="media-left">
-                                        <div class="vote-wrap">
-                                            <div class="save-post">
-                                                <a href="#"><span class="glyphicon glyphicon-star"
-                                                        aria-label="Save"></span></a>
-                                            </div>
-                                            <div class="vote up">
-                                                <i class="glyphicon glyphicon-menu-up"></i>
-                                            </div>
-                                            <div class="vote inactive">
-                                                <i class="glyphicon glyphicon-menu-down"></i>
+                                        <div class="panel-collapse collapse in" id="collapseOne">
+                                            <div class="media-left" style="width: 17vw;"></div>
+                                            <div class="media-body"
+                                                style="display: flex;  
+                                            flex-wrap: wrap;background: rgba(128, 128, 128,0.2);border-radius:10px;padding:10px;width: 50vw;">
+                                                {{ $comment->comment }}
                                             </div>
                                         </div>
-                                        <!-- vote-wrap -->
-                                    </div>
-                                    <!-- media-left -->
-
-
-                                    <div class="media-body">
-                                        <p>yazmayın artık amk, görmeyeyim sol framede. insan bi meraklanıyor,
-                                            ümitleniyor. sonra yine
-                                            özlem dolu yazıları görüp hayal kırıklığıyla okuyorum.</p>
-                                        <div class="comment-meta">
-                                            <span><a href="#">delete</a></span>
-                                            <span><a href="#">report</a></span>
-                                            <span><a href="#">hide</a></span>
-                                            <span>
-                                                <a class="" role="button" data-toggle="collapse"
-                                                    href="#replyCommentT" aria-expanded="false"
-                                                    aria-controls="collapseExample">reply</a>
-                                            </span>
-                                            <div class="collapse" id="replyCommentT">
-                                                <form>
-                                                    <div class="form-group">
-                                                        <label for="comment">Your Comment</label>
-                                                        <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-default">Send</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <!-- comment-meta -->
-
-                                        <div class="media">
-                                            <!-- answer to the first comment -->
-
-                                            <div class="media-heading">
-                                                <button class="btn btn-default btn-collapse btn-xs" type="button"
-                                                    data-toggle="collapse" data-target="#collapseTwo"
-                                                    aria-expanded="false" aria-controls="collapseExample"><span
-                                                        class="glyphicon glyphicon-minus"
-                                                        aria-hidden="true"></span></button> <span
-                                                    class="label label-info"></span>
-                                                vertu 12 sat once yazmis
-                                            </div>
-
-                                            <div class="panel-collapse collapse in" id="collapseTwo">
-
-                                                <div class="media-left">
-                                                    <div class="vote-wrap">
-                                                        <div class="save-post">
-                                                            <a href="#"><span class="glyphicon glyphicon-star"
-                                                                    aria-label="Save"></span></a>
-                                                        </div>
-                                                        <div class="vote up">
-                                                            <i class="glyphicon glyphicon-menu-up"></i>
-                                                        </div>
-                                                        <div class="vote inactive">
-                                                            <i class="glyphicon glyphicon-menu-down"></i>
-                                                        </div>
-                                                    </div>
-                                                    <!-- vote-wrap -->
-                                                </div>
-                                                <!-- media-left -->
-
-
-                                                <div class="media-body">
-                                                    <p>yazmayın artık amk, görmeyeyim sol framede. insan bi
-                                                        meraklanıyor, ümitleniyor.
-                                                        sonra yine özlem dolu yazıları görüp hayal kırıklığıyla
-                                                        okuyorum.</p>
-                                                    <div class="comment-meta">
-                                                        <span><a href="#">delete</a></span>
-                                                        <span><a href="#">report</a></span>
-                                                        <span><a href="#">hide</a></span>
-                                                        <span>
-                                                            <a class="" role="button" data-toggle="collapse"
-                                                                href="#replyCommentThree" aria-expanded="false"
-                                                                aria-controls="collapseExample">reply</a>
-                                                        </span>
-                                                        <div class="collapse" id="replyCommentThree">
-                                                            <form>
-                                                                <div class="form-group">
-                                                                    <label for="comment">Your Comment</label>
-                                                                    <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                                </div>
-                                                                <button type="submit"
-                                                                    class="btn btn-default">Send</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <!-- comment-meta -->
-                                                </div>
-                                            </div>
-                                            <!-- comments -->
-
-                                        </div>
-                                        <!-- answer to the first comment -->
-
                                     </div>
                                 </div>
-                                <!-- comments -->
-
-                            </div>
-                            <!-- first comment -->
-                            <div class="media">
-                                <!-- first comment -->
-
-                                <div class="media-heading">
-                                    <button class="btn btn-default btn-xs" type="button" data-toggle="collapse"
-                                        data-target="#collapseThree" aria-expanded="false"
-                                        aria-controls="collapseExample"><span class="glyphicon glyphicon-minus"
-                                            aria-hidden="true"></span></button> <span class="label label-info"></span>
-                                    vertu 12 sat once yazmis
-                                </div>
-
-                                <div class="panel-collapse collapse in" id="collapseThree">
-
-                                    <div class="media-left">
-                                        <div class="vote-wrap">
-                                            <div class="save-post">
-                                                <a href="#"><span class="glyphicon glyphicon-star"
-                                                        aria-label="Kaydet"></span></a>
-                                            </div>
-                                            <div class="vote up">
-                                                <i class="glyphicon glyphicon-menu-up"></i>
-                                            </div>
-                                            <div class="vote inactive">
-                                                <i class="glyphicon glyphicon-menu-down"></i>
-                                            </div>
-                                        </div>
-                                        <!-- vote-wrap -->
-                                    </div>
-                                    <!-- media-left -->
-
-
-                                    <div class="media-body">
-                                        <p>yazmayın artık amk, görmeyeyim sol framede. insan bi meraklanıyor,
-                                            ümitleniyor. sonra yine
-                                            özlem dolu yazıları görüp hayal kırıklığıyla okuyorum.</p>
-                                        <div class="comment-meta">
-                                            <span><a href="#">sil</a></span>
-                                            <span><a href="#">kaydet</a></span>
-                                            <span><a href="#">sikayer et</a></span>
-                                            <span>
-                                                <a class="" role="button" data-toggle="collapse"
-                                                    href="#replyCommentFour" aria-expanded="false"
-                                                    aria-controls="collapseExample">cevapla</a>
-                                            </span>
-                                            <div class="collapse" id="replyCommentFour">
-                                                <form>
-                                                    <div class="form-group">
-                                                        <label for="comment">Yorumunuz</label>
-                                                        <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-default">Yolla</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <!-- comment-meta -->
-
-                                        <div class="media">
-                                            <!-- answer to the first comment -->
-
-                                            <div class="media-heading">
-                                                <button class="btn btn-default btn-collapse btn-xs" type="button"
-                                                    data-toggle="collapse" data-target="#collapseFour"
-                                                    aria-expanded="false" aria-controls="collapseExample"><span
-                                                        class="glyphicon glyphicon-minus"
-                                                        aria-hidden="true"></span></button> <span
-                                                    class="label label-info"></span> vertu 12 sat once yazmis
-                                            </div>
-
-                                            <div class="panel-collapse collapse in" id="collapseFour">
-
-                                                <div class="media-left">
-                                                    <div class="vote-wrap">
-                                                        <div class="save-post">
-                                                            <a href="#"><span class="glyphicon glyphicon-star"
-                                                                    aria-label="Kaydet"></span></a>
-                                                        </div>
-                                                        <div class="vote up">
-                                                            <i class="glyphicon glyphicon-menu-up"></i>
-                                                        </div>
-                                                        <div class="vote inactive">
-                                                            <i class="glyphicon glyphicon-menu-down"></i>
-                                                        </div>
-                                                    </div>
-                                                    <!-- vote-wrap -->
-                                                </div>
-                                                <!-- media-left -->
-
-
-                                                <div class="media-body">
-                                                    <p>yazmayın artık amk, görmeyeyim sol framede. insan bi
-                                                        meraklanıyor, ümitleniyor.
-                                                        sonra yine özlem dolu yazıları görüp hayal kırıklığıyla
-                                                        okuyorum.</p>
-                                                    <div class="comment-meta">
-                                                        <span><a href="#">sil</a></span>
-                                                        <span><a href="#">kaydet</a></span>
-                                                        <span><a href="#">sikayer et</a></span>
-                                                        <span>
-                                                            <a class="" role="button" data-toggle="collapse"
-                                                                href="#replyCommentFive" aria-expanded="false"
-                                                                aria-controls="collapseExample">cevapla</a>
-                                                        </span>
-                                                        <div class="collapse" id="replyCommentFive">
-                                                            <form>
-                                                                <div class="form-group">
-                                                                    <label for="comment">Yorumunuz</label>
-                                                                    <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                                </div>
-                                                                <button type="submit"
-                                                                    class="btn btn-default">Yolla</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                    <!-- comment-meta -->
-
-                                                    <div class="media">
-                                                        <!-- first comment -->
-
-                                                        <div class="media-heading">
-                                                            <button class="btn btn-default btn-xs" type="button"
-                                                                data-toggle="collapse" data-target="#collapseFive"
-                                                                aria-expanded="false"
-                                                                aria-controls="collapseExample"><span
-                                                                    class="glyphicon glyphicon-minus"
-                                                                    aria-hidden="true"></span></button> <span
-                                                                class="label label-info"></span> vertu 12 sat once
-                                                            yazmis
-                                                        </div>
-
-                                                        <div class="panel-collapse collapse in" id="collapseFive">
-
-                                                            <div class="media-left">
-                                                                <div class="vote-wrap">
-                                                                    <div class="save-post">
-                                                                        <a href="#"><span
-                                                                                class="glyphicon glyphicon-star"
-                                                                                aria-label="Kaydet"></span></a>
-                                                                    </div>
-                                                                    <div class="vote up">
-                                                                        <i class="glyphicon glyphicon-menu-up"></i>
-                                                                    </div>
-                                                                    <div class="vote inactive">
-                                                                        <i class="glyphicon glyphicon-menu-down"></i>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- vote-wrap -->
-                                                            </div>
-                                                            <!-- media-left -->
-
-
-                                                            <div class="media-body">
-                                                                <p>yazmayın artık amk, görmeyeyim sol framede. insan bi
-                                                                    meraklanıyor,
-                                                                    ümitleniyor. sonra yine özlem dolu yazıları görüp
-                                                                    hayal kırıklığıyla
-                                                                    okuyorum.</p>
-                                                                <div class="comment-meta">
-                                                                    <span><a href="#">sil</a></span>
-                                                                    <span><a href="#">kaydet</a></span>
-                                                                    <span><a href="#">sikayer et</a></span>
-                                                                    <span>
-                                                                        <a class="" role="button"
-                                                                            data-toggle="collapse"
-                                                                            href="#replyCommentSix"
-                                                                            aria-expanded="false"
-                                                                            aria-controls="collapseExample">cevapla</a>
-                                                                    </span>
-                                                                    <div class="collapse" id="replyCommentSix">
-                                                                        <form>
-                                                                            <div class="form-group">
-                                                                                <label for="comment">Yorumunuz</label>
-                                                                                <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                                            </div>
-                                                                            <button type="submit"
-                                                                                class="btn btn-default">Yolla</button>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- comment-meta -->
-
-                                                                <div class="media">
-                                                                    <!-- answer to the first comment -->
-
-                                                                    <div class="media-heading">
-                                                                        <button
-                                                                            class="btn btn-default btn-collapse btn-xs"
-                                                                            type="button" data-toggle="collapse"
-                                                                            data-target="#collapseSix"
-                                                                            aria-expanded="false"
-                                                                            aria-controls="collapseExample"><span
-                                                                                class="glyphicon glyphicon-minus"
-                                                                                aria-hidden="true"></span></button>
-                                                                        <span class="label label-info"></span>
-                                                                        vertu 12 sat once
-                                                                        yazmis
-                                                                    </div>
-
-                                                                    <div class="panel-collapse collapse in"
-                                                                        id="collapseSix">
-
-                                                                        <div class="media-left">
-                                                                            <div class="vote-wrap">
-                                                                                <div class="save-post">
-                                                                                    <a href="#"><span
-                                                                                            class="glyphicon glyphicon-star"
-                                                                                            aria-label="Kaydet"></span></a>
-                                                                                </div>
-                                                                                <div class="vote up">
-                                                                                    <i
-                                                                                        class="glyphicon glyphicon-menu-up"></i>
-                                                                                </div>
-                                                                                <div class="vote inactive">
-                                                                                    <i
-                                                                                        class="glyphicon glyphicon-menu-down"></i>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- vote-wrap -->
-                                                                        </div>
-                                                                        <!-- media-left -->
-
-
-                                                                        <div class="media-body">
-                                                                            <p>yazmayın artık amk, görmeyeyim sol
-                                                                                framede. insan bi
-                                                                                meraklanıyor, ümitleniyor. sonra yine
-                                                                                özlem dolu
-                                                                                yazıları görüp hayal kırıklığıyla
-                                                                                okuyorum.</p>
-                                                                            <div class="comment-meta">
-                                                                                <span><a href="#">sil</a></span>
-                                                                                <span><a
-                                                                                        href="#">kaydet</a></span>
-                                                                                <span><a href="#">sikayer
-                                                                                        et</a></span>
-                                                                                <span>
-                                                                                    <a class="" role="button"
-                                                                                        data-toggle="collapse"
-                                                                                        href="#replyCommentOne"
-                                                                                        aria-expanded="false"
-                                                                                        aria-controls="collapseExample">cevapla</a>
-                                                                                </span>
-                                                                                <div class="collapse"
-                                                                                    id="replyCommentOne">
-                                                                                    <form>
-                                                                                        <div class="form-group">
-                                                                                            <label
-                                                                                                for="comment">Yorumunuz</label>
-                                                                                            <textarea name="comment" class="form-control" rows="3"></textarea>
-                                                                                        </div>
-                                                                                        <button type="submit"
-                                                                                            class="btn btn-default">Yolla</button>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- comment-meta -->
-
-
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- comments -->
-
-                                                                </div>
-                                                                <!-- answer to the first comment -->
-
-                                                            </div>
-                                                        </div>
-                                                        <!-- comments -->
-
-                                                    </div>
-                                                    <!-- first comment -->
-                                                </div>
-                                            </div>
-                                            <!-- comments -->
-
-                                        </div>
-                                        <!-- answer to the first comment -->
-
-                                    </div>
-                                </div>
-                                <!-- comments -->
-
-                            </div>
-                            <!-- first comment -->
-                        </div>
-
+                            @endif
+                        @endforeach
                     </div>
-                    <!-- post-comments -->
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-    $('[data-toggle="collapse"]').on('click', function() {
-            var $this=$(this),
-            $parent=typeof $this.data('parent') !=='undefined'? $($this.data('parent')) : undefined;
-
-            if($parent===undefined) {
-                $this.find('.glyphicon').toggleClass('glyphicon-plus glyphicon-minus');
-                return true;
-            }
-
-            var currentIcon=$this.find('.glyphicon');
-            currentIcon.toggleClass('glyphicon-plus glyphicon-minus');
-            $parent.find('.glyphicon').not(currentIcon).removeClass('glyphicon-minus').addClass('glyphicon-plus');
-
-        }
-
-    );
-</style>

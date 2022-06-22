@@ -19,6 +19,7 @@ Route::post('/wishlist/{product}', 'App\Http\Controllers\UserController@wishlist
 Route::get('/wishlist', 'App\Http\Controllers\HomeController@wishlist');
 Route::get('/wishlist/remove/{product}', 'App\Http\Controllers\UserController@removeWishlist');
 Route::post('/comment', 'App\Http\Controllers\UserController@comment');
+Route::get('/comment/remove/{product}', 'App\Http\Controllers\UserController@removeComment');
 Route::post('/cart', 'App\Http\Controllers\CartController@store');
 
 Route::group(['middleware'=>'userAuth'],function(){
@@ -174,4 +175,16 @@ Route::prefix('admin')->group(function () {
             Route::get('delete/{paymentMethod}', 'destroy');
         });
     });
+
+    Route::prefix('advertisment')->group(function () {
+        Route::controller(App\Http\Controllers\AdvertismentController::class)->group(function () {
+            Route::get('/', 'index');
+            Route::get('/add', 'add');
+            Route::post('/', 'store');
+            Route::get('{advertisment}', 'edit');
+            Route::patch('{advertisment}', 'update');
+            Route::get('delete/{advertisment}', 'destroy');
+        });
+    });
+
 });

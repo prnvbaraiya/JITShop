@@ -17,6 +17,6 @@
     }
     ?>
 
-    @component('admin.components.table', ['columns' => $columns, 'contents' => $products, 'tableName' => 'product'])
+    @component('admin.components.table', ['columns' => $columns, 'contents' => $products, 'tableName' => 'product', 'loginType' => 'vendor'])
     @endcomponent
 @endsection

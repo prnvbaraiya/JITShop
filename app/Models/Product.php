@@ -44,4 +44,8 @@ class Product extends Model
     {
         return $this->hasMany(Wishlist::class);
     }
+
+    public function comment(){
+        return $this->hasMany(ProductComment::class);
+    }
 }

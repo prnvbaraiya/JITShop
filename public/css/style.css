@@ -1848,3 +1848,17 @@ img {
     font-size: 20px;
     color: #212529;
 }
+
+.center-main * {
+    max-width: 68vw !important;
+}
+
+.slider-size {
+    height: 200px;
+}
+
+/* img {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: attr(width) / attr(height) !important;
+} */

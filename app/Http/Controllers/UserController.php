@@ -260,12 +260,30 @@ class UserController extends Controller
         $data=request()->validate([
             'comment'=>'required',
         ]);
+        $mess='';
         $user= User::find(Session::get('userId'));
-        ProductComment::firstOrCreate([
-            'product_id'=>request('product_id'),
-            'user_id'=>$user->id,
-        ],['comment'=>request('comment')]);
-        return redirect()->back()->with('alert-type','success')->with('message','Comment Added');
+        if(request('submitType')=='Update'){
+            $comment= ProductComment::where('product_id',request('product_id'))->where('user_id',$user->id)->first();
+            $comment->update(['comment'=>request('comment')]);
+            $comment->save();
+            $mess='Comment Updated';
+        } else{
+            ProductComment::firstOrCreate([
+                'product_id'=>request('product_id'),
+                'user_id'=>$user->id,
+            ],['comment'=>request('comment')]);
+            $mess= 'Comment Added';
+        }
+        return redirect()->back()->with('alert-type','success')->with('message',$mess);
+    }
+
+    public function removeComment(Product $product)
+    {
+        $comment= $product->comment->where('user_id',Session::get('userId'))->first();
+        $comment->delete();
+        return redirect()->back()
+                ->with('alert-type','error')
+                ->with('message','Comment Removed');
     }
 
     public function logout()

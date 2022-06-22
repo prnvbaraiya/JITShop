@@ -54,5 +54,11 @@
                 <span class="menu-title">Payment</span>
             </a>
         </li>
+        <li class="nav-item" id="advertisment">
+            <a class="nav-link" href="/admin/advertisment">
+                <i class="mdi mdi-view-headline menu-icon"></i>
+                <span class="menu-title">Advertisment</span>
+            </a>
+        </li>
     </ul>
 </nav>

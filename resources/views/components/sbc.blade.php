@@ -5,8 +5,10 @@
             @foreach ($categories as $category)
                 <div class="col-md-3 col-sm-4 col-xs-6">
                     <a href="/category/{{ $category->id }}">
-                        <div class="box">
-                            <img src="{{ $category->image ?? '/storage/product/no-image.png' }}" /><br />
+                        <div class="box ">
+                            <img src="{{ $category->image ?? '/storage/product/no-image.png' }}"
+                                class="img-responsive center-block" />
+                            <br />
                             <label>{{ $category->name }}</label><br />
                         </div>
                     </a>

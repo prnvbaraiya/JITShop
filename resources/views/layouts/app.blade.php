@@ -35,15 +35,57 @@
 </head>
 
 <body>
+    <?php
+    $rightAdvts = App\Models\Advertisment::where('position', 'right')
+        ->limit(5)
+        ->get();
+    $leftAdvts = App\Models\Advertisment::where('position', 'left')
+        ->limit(5)
+        ->get();
+    ?>
     @include('partial.header')
-    <div id="app" style="margin-top: 120px">
-        <main class="py-4">
+    <div id="app" style="margin-top: 120px;display:flex;">
+        <section class="left"
+            style="min-height:100vh;min-width: 15vw;max-width: 15vw;word-wrap:break-word;background: rgba(240, 231, 231, 0.5);">
+            <div style="padding: 5px;">
+                @foreach ($leftAdvts as $advertisement)
+                    <br /><br />
+                    <a href="{{ $advertisement->url }}" target="_blank">
+                        <img src="{{ $advertisement->image }}" alt="" id="{{ $advertisement->id }}"
+                            style="display:block;padding: 40px;">
+                    </a>
+                @endforeach
+            </div>
+        </section>
+        <main class="py-4 center-main" style="max-width: 70vw;overflow: hidden;">
             @yield('content')
         </main>
+        <section class="right"
+            style="min-height:100vh;min-width: 15vw;max-width: 15vw;word-wrap:break-word;background: rgba(240, 231, 231, 0.5);">
+            <div id="hide1" style="display:block">
+                @foreach ($rightAdvts as $advertisement)
+                    <br /><br />
+                    <a href="{{ $advertisement->url }}" target="_blank">
+                        <img src="{{ $advertisement->image }}" alt="" id="{{ $advertisement->id }}"
+                            style="display:block;padding: 40px;">
+                    </a>
+                @endforeach
+            </div>
+        </section>
     </div>
     @include('partial.footer')
 
     <script>
+        @foreach ($rightAdvts as $advertisement)
+            setTimeout(function() {
+                $('#{{ $advertisement->id }}').hide()
+            }, {{ $advertisement->duration }});
+        @endforeach
+        @foreach ($leftAdvts as $advertisement)
+            setTimeout(function() {
+                $('#{{ $advertisement->id }}').hide()
+            }, {{ $advertisement->duration }});
+        @endforeach
         @if (Session::has('message'))
             toastr.{{ Session::get('alert-type', 'error') }}("{{ Session::get('message') }}");
         @endif

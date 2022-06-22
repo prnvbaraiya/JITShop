@@ -11,7 +11,9 @@ use \App\Models\ProductRate;
 use \App\Models\VendorRate;
 use \App\Models\Wishlist;
 use \App\Models\Vendor;
+use \App\Models\ProductComment;
 use Session;
+use Cookie;
 use Illuminate\Support\Arr;
 
 class HomeController extends Controller
@@ -21,6 +23,10 @@ class HomeController extends Controller
         $categories= Category::get();
         $sellers= Vendor::get();
         $bestSProducts= Product::orderBy('sold_quantity','desc')->limit(8)->get();
+        if(!Session::has('adDeploy')){
+            Cookie::queue('ad','/storage/product/no-image.png',1);
+            Session::put('adDeploy','/storage/product/no-image.png');
+        }
         return view('pages.index',compact('categories','sellers','bestSProducts'));
     }
     public function getBrands()
@@ -66,7 +72,8 @@ class HomeController extends Controller
                     'productRateCount'=>$productR->count(),
                     'userProductRate'=>$userProductRate];
         $inWishlist= User::find(Session::get('userId'))!=null ? User::find(Session::get('userId'))->wishlist->contains('product_id',$product->id) : false;
-        return view('pages.product',compact('product','inWishlist','productRate','vendorRate'));
+        $userComment= ProductComment::where('user_id',Session::get('userId'))->where('product_id',$product->id)->first();
+        return view('pages.product',compact('product','inWishlist','productRate','vendorRate','userComment'));
     }
 
     public function wishlist(){
